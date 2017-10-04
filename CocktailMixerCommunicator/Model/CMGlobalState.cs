@@ -9,6 +9,10 @@ using System.Xml.Serialization;
 
 namespace CocktailMixerCommunicator.Model
 {
+    /// <summary>
+    /// This item contains information about the current configuration of the CocktailMixer
+    /// as well as all the data about beverages and recipes
+    /// </summary>
     [Serializable]
     public class CMGlobalState
     {

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CocktailMixerCommunicator.Communication
 {
+    /// <summary>
+    /// Communicates via a serial port
+    /// </summary>
     public class SerialCommunicator
     {
         /// <summary>
@@ -15,11 +18,12 @@ namespace CocktailMixerCommunicator.Communication
         /// 
         /// KAFACMH => Kahmann Felix Arduino Cocktail Mixer Header;
         /// </summary>
+        [Obsolete("This header is not in use any longer", true)]
         private readonly byte[] HEADER_TEMPLATE = "KAFACMH".Select(x => (byte)x).ToArray();
-
-        private bool _isQueueActive = false;
-        public bool IsQueueActive => _isQueueActive;
-
+        
+        /// <summary>
+        /// Reference to the serialport object that is used for communication
+        /// </summary>
         private SerialPort _serialPort;
         public string PortName => _serialPort.PortName;
         public int BaudRate => _serialPort.BaudRate;

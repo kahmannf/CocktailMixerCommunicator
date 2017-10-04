@@ -11,6 +11,14 @@ using System.Xml.Serialization;
 
 namespace CocktailMixerCLI
 {
+    /********************************************************************  DISCLAIMER  ****************************************************************************/
+    /* 
+            I know this file/cli is a lot of mess, but it was a quick implementaion to test the basic communication
+            
+            i probably will forget about cleaning this up and find this fragment in a few years..
+
+            but hey it work :)
+    */
     public class CMCLI
     {
         public const int SLOT_COUNT = 11;
@@ -19,9 +27,9 @@ namespace CocktailMixerCLI
         /// <summary>
         /// Possible arguments:
         /// 
-        /// /order : place a order (see takeOrder(string[]) for additional parameter info)
+        /// /order : place a order
         /// 
-        /// /config : change or output config. (see ChangeConfig(string[] args) for additional parameter info)
+        /// /config : change or output config.
         /// 
         /// /cmstate : get or modify information about the CocktailMixer
         /// 
