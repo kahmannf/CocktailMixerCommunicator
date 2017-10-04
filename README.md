@@ -24,7 +24,7 @@ The Arduino recieves serial data. Each information package contains two bytes:</
 </br>
 The Arduino will then switch the output off (on not 0) or on (on 0).</br>
 </br>
-The reversed logic here is intended, because of the electronics that control the valves:</br>
+The reversed logic is intended, because of the electronics that control the valves:</br>
 On a low signal, a relay will trigger a valve (for each putput a different of course).</br>
 </br>
 The program has to:</br>
