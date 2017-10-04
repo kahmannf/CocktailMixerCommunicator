@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RandomUtilities">
-      <HintPath>..\..\RandomUtilities\RandomUtilities\RandomUtilities\RandomUtilities\bin\Debug\RandomUtilities.dll</HintPath>
+      <HintPath>..\..\RandomUtilities\RandomUtilities\bin\Debug\RandomUtilities.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
