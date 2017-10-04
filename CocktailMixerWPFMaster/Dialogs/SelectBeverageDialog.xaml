@@ -1,0 +1,34 @@
+﻿<Window x:Class="CocktailMixerWPFMaster.Dialogs.SelectBeverageDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CocktailMixerWPFMaster.Dialogs"
+        mc:Ignorable="d"
+        Title="SelectBeverageDialog" Height="300" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="32" />
+            <RowDefinition Height="32" />
+        </Grid.RowDefinitions>
+        <ListBox ItemsSource="{Binding SourceList}" Margin="20,5" DisplayMemberPath="Name">
+            
+        </ListBox>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Margin="0,0,0,5" Height="27" Content="Amount (ml):"></Label>
+            <TextBox Margin="5,0,5,5" Grid.Column="1" Height="27" Text="{Binding Amount}"></TextBox>
+        </Grid>
+        
+        <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
+            <Button Width="90" Height="27" Margin="5,0,5,0" Content="Cancel"></Button>
+            <Button Width="90" Height="27" Content="Save"></Button>
+        </StackPanel>
+        
+    </Grid>
+</Window>
