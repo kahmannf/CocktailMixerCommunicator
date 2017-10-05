@@ -31,6 +31,11 @@ namespace CocktailMixerWPFMaster
             vm.LoadData();
         }
 
+        private void ButtonAddRecipe_Click(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as MainViewModel).VMRecipe.AddRecipe();
+        }
+
         private void ButtonEditRecipe_Click(object sender, RoutedEventArgs e)
         {
             (this.DataContext as MainViewModel).VMRecipe.IsEditingEnabled = (this.DataContext as MainViewModel).VMRecipe.SelectedRecipe != null;
@@ -43,7 +48,7 @@ namespace CocktailMixerWPFMaster
 
         private void ButtonAddBeverage_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as MainViewModel).VMRecipe.AddRecipe();
+            (this.DataContext as MainViewModel).VMRecipe.AddBeverageToRecipe();
         }
 
         private void ButtonCancelRecipe_Click(object sender, RoutedEventArgs e)

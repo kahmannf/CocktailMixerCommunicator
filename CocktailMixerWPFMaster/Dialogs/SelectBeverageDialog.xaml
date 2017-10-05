@@ -16,17 +16,17 @@
             <ColumnDefinition Width="90" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ListBox ItemsSource="{Binding SourceList}" Margin="10,5" DisplayMemberPath="Name" Grid.ColumnSpan="2">
+        <ListBox ItemsSource="{Binding SourceList}" SelectedItem="{Binding SelectedBeverage}" Margin="10,5" DisplayMemberPath="Name" Grid.ColumnSpan="2">
             
         </ListBox>
 
         <Label Margin="5,0,0,5" Height="27" Content="Amount (ml):" Grid.Row="1"></Label>
-        <TextBox Margin="5,0,10,5" Grid.Column="1" Height="27" Grid.Row="1" Text="{Binding Amount}"></TextBox>
+        <TextBox Margin="5,0,10,5" Grid.Column="1" Height="27" Grid.Row="1" Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         
         
         <StackPanel Grid.Row="2" Grid.Column="1"  Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
             <Button Width="90" Height="27" Margin="5,0,5,0" Content="Cancel" Click="ButtonCancel_Click"></Button>
-            <Button Width="90" Height="27" Content="Save" Click="ButtonSave_Click"></Button>
+            <Button Width="90" Height="27" IsEnabled="{Binding IsSelectionValid}" Content="Save" Click="ButtonSave_Click"></Button>
         </StackPanel>
         
     </Grid>

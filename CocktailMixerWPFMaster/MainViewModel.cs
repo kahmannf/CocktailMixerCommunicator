@@ -111,6 +111,17 @@ namespace CocktailMixerWPFMaster
             }
         }
 
+        public void SaveCurrentState()
+        {
+            CMGlobalState state = new CMGlobalState();
 
+            state.BeverageDataBase = new List<Beverage>(_vmBeverage.ListBeverages);
+            state.Recipes = new List<Recipe>(_vmRecipe.ListRecipes);
+
+            //todo update this
+            state.Supply = new List<MixerSupplyItem>();
+
+            state.ApplyChanges(CMCLI.Configuration.CMStateDirectory);
+        }
     }
 }

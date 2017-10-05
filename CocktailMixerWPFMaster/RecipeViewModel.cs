@@ -39,6 +39,23 @@ namespace CocktailMixerWPFMaster
             }
         }
 
+        public void AddRecipe()
+        {
+            if (!IsSelectionEnabled)
+                return;
+
+            Recipe newRecipe = new Recipe
+            {
+                Name = "New Recipe"
+            };
+
+            ListRecipes.Add(newRecipe);
+
+            SelectedRecipe = newRecipe;
+
+            IsEditingEnabled = true;
+        }
+
         private Recipe _selecteRecipe;
 
         public Recipe SelectedRecipe
@@ -53,7 +70,7 @@ namespace CocktailMixerWPFMaster
             }
         }
 
-        public void AddRecipe()
+        public void AddBeverageToRecipe()
         {
             //all loaded beverages
             IEnumerable<Beverage> allBeverages = _mainVM.VMBeverage.ListBeverages;
@@ -89,6 +106,12 @@ namespace CocktailMixerWPFMaster
             if (SelectedIngredient != null)
             {
                 SelectedIngredients.Remove(SelectedIngredient);
+                //update original list
+                SelectedRecipe.Ingredients = new List<Beverage>(from recIngred in SelectedRecipe.Ingredients
+                                                                join vmIngred in SelectedIngredients 
+                                                                on recIngred.GUID equals vmIngred.GUID
+                                                                select recIngred);
+                SelectedIngredient = null;
             }
         }
 
@@ -103,7 +126,34 @@ namespace CocktailMixerWPFMaster
 
         public void SaveRecipe()
         {
-            throw new NotImplementedException();
+            if (SelectedIngredients == null || SelectedIngredients.Count == 0)
+            {
+                System.Windows.MessageBox.Show("There has to be at least one ingredient in each recipe!");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(SelectedName))
+            {
+                System.Windows.MessageBox.Show("Name cannot be empty");
+                return;
+            }
+
+            //check if another recipe with that name exists
+            if (ListRecipes.Any(x => x.Name == SelectedName && x != SelectedRecipe))
+            {
+                System.Windows.MessageBox.Show($"A recipe with the name \"{SelectedName}\" already exists");
+                return;
+            }
+
+            SelectedRecipe.Ingredients = new List<Beverage>(SelectedIngredients);
+            SelectedRecipe.Name = SelectedName;
+
+            _mainVM.SaveCurrentState();
+
+            //Update changed names
+            ListRecipes = new ObservableCollection<Recipe>(ListRecipes);
+
+            IsEditingEnabled = false;
         }
 
         private string _selectedName;
@@ -162,7 +212,7 @@ namespace CocktailMixerWPFMaster
             set
             {
                 _selectedIngredient = value;
-                IsBeverageSelected = _selectedIngredients != null;
+                IsBeverageSelected = _selectedIngredient != null;
                 NotifyPropertyChanged();
             }
         }

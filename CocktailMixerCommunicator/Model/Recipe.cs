@@ -9,6 +9,11 @@ namespace CocktailMixerCommunicator.Model
     [Serializable]
     public class Recipe
     {
+        public Recipe()
+        {
+            Ingredients = new List<Beverage>();
+        }
+
         public List<Beverage> Ingredients { get; set; }
 
         public string Name { get; set; }

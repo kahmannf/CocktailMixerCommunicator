@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CocktailMixerWPFMaster"
         mc:Ignorable="d"
-        Title="CocktailMixer Controller" Height="450" MinHeight="450" Width="750" MinWidth="750">
+        Title="CocktailMixer Controller" Height="450" MinHeight="450" Width="790" MinWidth="790">
     <Grid>
         <TabControl>
             <TabItem Header="Recipes" DataContext="{Binding VMRecipe}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="180" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -64,11 +64,20 @@
                             <StackPanel Orientation="Horizontal" Margin="5,15,5,0" HorizontalAlignment="Right" Grid.Row="3" Grid.Column="1">
                                 <Button Height="27" Width="150" Content="Cancel" Click="ButtonCancelRecipe_Click" />
                                 <Button Height="27" Width="150" Margin="5,0,0,0" Content="Save" 
-                                            IsEnabled="{Binding IsBeverageSelected}" Click="ButtonSaveRecipe_Click"/>
+                                            Click="ButtonSaveRecipe_Click"/>
                             </StackPanel>
                         </Grid>
                     </GroupBox>
-                    <Button Grid.Row="1" Margin="5" Content="Edit" Click="ButtonEditRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Button Margin="5,5,2.5,5" Content="Add" Click="ButtonAddRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
+                        <Button Margin="2.5,5,5,5" Grid.Column="1" Content="Edit" Click="ButtonEditRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
+                    </Grid>
+                    
                 </Grid>
             </TabItem>
             <TabItem Header="Beverages">
