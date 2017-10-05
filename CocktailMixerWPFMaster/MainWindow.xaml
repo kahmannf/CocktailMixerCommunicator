@@ -75,7 +75,8 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Button Margin="5,5,2.5,5" Content="Add" Click="ButtonAddRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
-                        <Button Margin="2.5,5,5,5" Grid.Column="1" Content="Edit" Click="ButtonEditRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
+                        <Button Margin="2.5,5,2.5,5" Grid.Column="1" Content="Edit" Click="ButtonEditRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
+                        <Button Margin="2.5,5,5,5" Grid.Column="2" Content="Delete" Click="ButtonDeleteRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
                     </Grid>
                     
                 </Grid>

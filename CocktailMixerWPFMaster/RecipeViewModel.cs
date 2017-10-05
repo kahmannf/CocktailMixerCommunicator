@@ -65,8 +65,17 @@ namespace CocktailMixerWPFMaster
             {
                 _selecteRecipe = value;
                 NotifyPropertyChanged();
-                SelectedName = _selecteRecipe.Name;
-                SelectedIngredients = new ObservableCollection<Beverage>(_selecteRecipe.Ingredients);
+                if (_selecteRecipe != null)
+                {
+                    SelectedName = _selecteRecipe.Name;
+                    SelectedIngredients = new ObservableCollection<Beverage>(_selecteRecipe.Ingredients);
+                }
+                else
+                {
+                    IsEditingEnabled = false;
+                    SelectedName = string.Empty;
+                    SelectedIngredients = new ObservableCollection<Beverage>();
+                }
             }
         }
 
@@ -98,6 +107,19 @@ namespace CocktailMixerWPFMaster
                 SelectedRecipe.Ingredients.Add(newBeverage);
 
                 SelectedIngredients.Add(newBeverage);
+            }
+        }
+
+        public void DeleteRecipe()
+        {
+            if (SelectedRecipe == null)
+                return;
+
+            if (System.Windows.MessageBox.Show($"Delete recipe \"{SelectedRecipe.Name}\"? This cannot be undone!", "Are You Sure?", System.Windows.MessageBoxButton.YesNo) 
+                == System.Windows.MessageBoxResult.Yes)
+            {
+                ListRecipes.Remove(SelectedRecipe);
+                _mainVM.SaveCurrentState();
             }
         }
 

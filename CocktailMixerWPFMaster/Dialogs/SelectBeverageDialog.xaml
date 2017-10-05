@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CocktailMixerWPFMaster.Dialogs"
         mc:Ignorable="d"
-        Title="Select a Beverage" Height="300" Width="300">
+        Title="Select a Beverage" Height="600" Width="330">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
