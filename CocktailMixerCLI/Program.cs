@@ -304,32 +304,29 @@ namespace CocktailMixerCLI
         {
             if (args.Length < 2)
                 throw new ArgumentException("Not enough arguments provided for \"/cmstate\"");
-            if (args[1].TrimStart('/', '-') == "create")
-            {
-                if (string.IsNullOrEmpty(Configuration.CMStateDirectory))
-                    throw new InvalidOperationException("Must add a CMstatedirectory to the config befor creating a new CMState file");
+            
+            CMState = CMGlobalState.LoadStateFromFile(Configuration.CMStateDirectory);
 
-                CMGlobalState.CreateNew(Configuration.CMStateDirectory);
-                return 0;
-            }
-            else
+            switch (args[1].ToLower().TrimStart('/', '-'))
             {
-                CMState = CMGlobalState.LoadStateFromFile(Configuration.CMStateDirectory);
+                case "beverage":
+                    return HandleBeverage(args);
+                case "create":
+                    if (string.IsNullOrEmpty(Configuration.CMStateDirectory))
+                        throw new InvalidOperationException("Must add a CMstatedirectory to the config befor creating a new CMState file");
 
-                switch (args[1].ToLower().TrimStart('/', '-'))
-                {
-                    case "beverage":
-                        return HandleBeverage(args);
-                    case "recipe":
-                        return HandleRecipe(args);
-                    case "supply":
-                        return HandleSupply(args);
-                    case "print":
-                        return HandleCMStatePrint(args);
-                    default:
-                        throw new InvalidOperationException($"Unknown Argument for /cmstate: \"{args[1]}\"");
-                }
+                    CMGlobalState.CreateNew(Configuration.CMStateDirectory);
+                    return 0;
+                case "recipe":
+                    return HandleRecipe(args);
+                case "supply":
+                    return HandleSupply(args);
+                case "print":
+                    return HandleCMStatePrint(args);
+                default:
+                    throw new InvalidOperationException($"Unknown Argument for /cmstate: \"{args[1]}\"");
             }
+            
         }
 
         public static CMGlobalState CMState;
