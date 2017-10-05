@@ -81,8 +81,13 @@
                     
                 </Grid>
             </TabItem>
-            <TabItem Header="Beverages">
-                
+            <TabItem Header="Beverages" DataContext="{Binding VMBeverage}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
