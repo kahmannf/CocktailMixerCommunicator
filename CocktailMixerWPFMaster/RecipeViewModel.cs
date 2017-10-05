@@ -55,15 +55,19 @@ namespace CocktailMixerWPFMaster
 
         public void AddRecipe()
         {
+            //all loaded beverages
             IEnumerable<Beverage> allBeverages = _mainVM.VMBeverage.ListBeverages;
 
+            //beverages inside the recipe: Waring: not the same instances as in allBeverages
             IEnumerable<Beverage> recipeBeverage = SelectedRecipe.Ingredients;
 
+            //instance of allBeverages of beverages inside the recipe
             IEnumerable<Beverage> inclusiveBeverages = from singleAllBev in allBeverages
                                                        join singleRecBev in recipeBeverage
                                                        on singleAllBev.GUID equals singleRecBev.GUID
                                                        select singleAllBev;
 
+            //all other beverages
             IEnumerable<Beverage> exclusiveBeverages = allBeverages.Except(inclusiveBeverages);
 
             SelectBeverageDialog dialog = new SelectBeverageDialog(exclusiveBeverages);
@@ -72,7 +76,7 @@ namespace CocktailMixerWPFMaster
 
             if (dialogresult.HasValue == dialogresult.Value)
             {
-                Beverage newBeverage = (dialog.DataContext as SelectBeverageViewModel).SelectedBeverage;
+                Beverage newBeverage = dialog.SelectedBeverage;
 
                 SelectedRecipe.Ingredients.Add(newBeverage);
 

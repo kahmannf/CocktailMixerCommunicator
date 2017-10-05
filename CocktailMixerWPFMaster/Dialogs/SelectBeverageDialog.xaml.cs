@@ -25,5 +25,21 @@ namespace CocktailMixerWPFMaster.Dialogs
             InitializeComponent();
             this.DataContext = new SelectBeverageViewModel(selectFrom);
         }
+
+        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+        }
+
+        private void ButtonSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is SelectBeverageViewModel vm)
+            {
+                SelectedBeverage = vm.SelectedBeverage;
+                this.DialogResult = SelectedBeverage != null;
+            }
+        }
+
+        public Beverage SelectedBeverage { get; private set; }
     }
 }

@@ -33,7 +33,7 @@ namespace CocktailMixerWPFMaster
 
         private void ButtonEditRecipe_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as MainViewModel).VMRecipe.IsEditingEnabled = true;
+            (this.DataContext as MainViewModel).VMRecipe.IsEditingEnabled = (this.DataContext as MainViewModel).VMRecipe.SelectedRecipe != null;
         }
 
         private void ButtonRemoveBeverage_Click(object sender, RoutedEventArgs e)

@@ -54,6 +54,11 @@ namespace CocktailMixerWPFMaster
 
             VMBeverage = new BeverageViewModel(this);
 
+            if (!File.Exists(Path.Combine(CMCLI.Configuration.CMStateDirectory, CMGlobalState.CMSTATE_FILENAME)))
+            {
+                CMGlobalState.CreateNew(CMCLI.Configuration.CMStateDirectory);
+            }
+
             CMGlobalState state = CMGlobalState.LoadStateFromFile(CMCLI.Configuration.CMStateDirectory);
 
             VMRecipe.LoadFromCMState(state);
