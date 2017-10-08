@@ -36,7 +36,7 @@ namespace CocktailMixerCommunicator.Model
 
             return result;
         }
-        
+
         public static CMGlobalState LoadStateFromFile(string directorypath)
         {
             try
@@ -68,7 +68,11 @@ namespace CocktailMixerCommunicator.Model
 
                     fs.Read(data, 0, (int)fs.Length);
 
-                    return (CMGlobalState)data;
+                    CMGlobalState state = (CMGlobalState)data;
+
+                    state.SortLists();
+
+                    return state;
                 }
             }
             catch (InvalidCastException icex)
@@ -112,6 +116,9 @@ namespace CocktailMixerCommunicator.Model
 
                 #endregion
 
+                //update the recipes (in case of changes to the beverages)
+                UpdateRecipeIngredients();
+
                 using (FileStream fs = new FileStream(Path.Combine(directorypath, CMSTATE_FILENAME), FileMode.OpenOrCreate))
                 {
                     byte[] data = (byte[])this;
@@ -124,7 +131,27 @@ namespace CocktailMixerCommunicator.Model
             }
         }
 
-        
+        private void UpdateRecipeIngredients()
+        {
+            foreach (Recipe recipe in Recipes)
+            {
+                IEnumerable<Beverage> updatedIngredients = from ingredient in recipe.Ingredients
+                                                           join beverage in BeverageDataBase
+                                                           on ingredient.GUID equals beverage.GUID
+                                                           select new Beverage()
+                                                           {
+                                                               GUID = ingredient.GUID,
+                                                               AlcoholVolPercentage = beverage.AlcoholVolPercentage,
+                                                               Amount = ingredient.Amount,
+                                                               Name = beverage.Name,
+                                                               AmountTimeCoefficient = beverage.AmountTimeCoefficient
+                                                           };
+
+                recipe.Ingredients = new List<Beverage>(updatedIngredients);
+            }
+        }
+
+
         /// <summary>
         /// Serializes a CMGlobalState object using a BinaryFormatter
         /// </summary>
@@ -269,6 +296,14 @@ namespace CocktailMixerCommunicator.Model
         public void DeleteRecipe(Recipe r, string cmStateDirectory)
         {
             DeleteRecipe(r.Name, cmStateDirectory);
+        }
+
+        private void SortLists()
+        {
+            BeverageDataBase = new List<Beverage>(BeverageDataBase.OrderBy(x => x.Name));
+            Recipes = new List<Recipe>(Recipes.OrderBy(x => x.Name));
+
+            Supply = new List<MixerSupplyItem>(Supply.OrderBy(x => x.SupplySlotID));
         }
 
         public override string ToString()

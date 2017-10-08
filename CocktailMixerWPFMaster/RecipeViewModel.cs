@@ -257,6 +257,11 @@ namespace CocktailMixerWPFMaster
         {
             ListRecipes = new ObservableCollection<Recipe>(state.Recipes);
             this.IsEditingEnabled = false;
+
+            if (SelectedRecipe != null)
+            {
+                SelectedRecipe = ListRecipes.FirstOrDefault(x => x.Name == SelectedRecipe.Name);
+            }
         }
     }
 }

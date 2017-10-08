@@ -122,6 +122,10 @@ namespace CocktailMixerWPFMaster
             state.Supply = new List<MixerSupplyItem>();
 
             state.ApplyChanges(CMCLI.Configuration.CMStateDirectory);
+
+            //saving may update some properties
+            VMRecipe.LoadFromCMState(state);
+            VMBeverage.LoadFromCMState(state);
         }
     }
 }

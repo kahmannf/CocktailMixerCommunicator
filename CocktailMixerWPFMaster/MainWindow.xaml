@@ -18,7 +18,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="37" />
                     </Grid.RowDefinitions>
-                    <ListBox Grid.RowSpan="2" ItemsSource="{Binding ListRecipes}" DisplayMemberPath="Name" 
+                    <ListBox ItemsSource="{Binding ListRecipes}" DisplayMemberPath="Name" 
                              SelectedItem="{Binding SelectedRecipe}" IsEnabled="{Binding IsSelectionEnabled}">
                         
                     </ListBox>
@@ -100,9 +100,9 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Button Margin="5,5,2.5,5">Add</Button>
+                        <Button Margin="5,5,2.5,5" Click="ButtonAddNewBeverage_Click">Add</Button>
                         <Button Grid.Column="1" Margin="2.5,5,2.5,5" Click="ButtonEdit_Click">Edit</Button>
-                        <Button Grid.Column="2" Margin="2.5,5,5,5">Delete</Button>
+                        <Button Grid.Column="2" Margin="2.5,5,5,5" Click="ButtonDeleteBeverage_Click">Delete</Button>
                     </Grid>
 
                     <GroupBox Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Header="Beverage" IsEnabled="{Binding IsEditEnabled}">
@@ -132,9 +132,8 @@
                                      Width="400" HorizontalAlignment="Right" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5,15,5,0" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1">
-                                <Button Height="27" Width="150" Content="Cancel" Click="" />
-                                <Button Height="27" Width="150" Margin="5,0,0,0" Content="Save" 
-                                            Click=""/>
+                                <Button Height="27" Width="150" Content="Cancel" Click="ButtonCancelBaverage_Click" />
+                                <Button Height="27" Width="150" Margin="5,0,0,0" Content="Save" Click="ButtonSaveBeverage_Click" />
                             </StackPanel>
                         </Grid>
                     </GroupBox>

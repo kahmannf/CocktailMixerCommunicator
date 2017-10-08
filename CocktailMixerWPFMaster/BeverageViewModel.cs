@@ -99,7 +99,97 @@ namespace CocktailMixerWPFMaster
             }
         }
 
+        public void SaveBeverage()
+        {
+            if (string.IsNullOrEmpty(_selectedName))
+            {
+                System.Windows.MessageBox.Show("Name cannot be empty");
+                return;
+            }
 
+            if (_selectedAlcVol < 0.0 || _selectedAlcVol > 100.0)
+            {
+                System.Windows.MessageBox.Show("Alcohol volume % has to be a value between 0.0 and 100.0");
+                return;
+            }
+
+            if (SelectedAmountTimeRatio <= 0.0)
+            {
+                System.Windows.MessageBox.Show("Amount time ratio has to be larger than 0.0");
+                return;
+            }
+
+            SelectedBeverage.Name = SelectedName;
+            SelectedBeverage.AlcoholVolPercentage = SelectedAlcVol;
+            SelectedBeverage.AmountTimeCoefficient = SelectedAmountTimeRatio;
+            SelectedBeverage.Amount = 0;
+
+            _mainVM.SaveCurrentState();
+
+            ListBeverages = new ObservableCollection<Beverage>(ListBeverages);
+
+            IsEditEnabled = false;
+        }
+
+        public void DeleteBeverage()
+        {
+            if (System.Windows.MessageBox.Show($"Delete beverage \"{SelectedBeverage.Name}\"? This cannot be undone!", "Are You Sure?", System.Windows.MessageBoxButton.YesNo)
+                == System.Windows.MessageBoxResult.Yes)
+            {
+                IEnumerable<Recipe> relatedRecipes = _mainVM.VMRecipe.ListRecipes.Where(x => x.Ingredients.Any(b => b.GUID == SelectedBeverage.GUID));
+
+                int count = relatedRecipes.Count();
+
+                if (count > 0)
+                {
+                    IEnumerable<Recipe> deleteRecipes = relatedRecipes.Where(x => x.Ingredients.Count == 1);
+                    IEnumerable<Recipe> modifyRecipes = relatedRecipes.Except(deleteRecipes);
+
+
+                    System.Windows.MessageBoxResult result = System.Windows.MessageBox.Show($"By deleting this beverage {modifyRecipes.Count()} recipies will be modified and {deleteRecipes.Count()} recipies will be deleted. Proceed?", "Waring", System.Windows.MessageBoxButton.YesNo);
+
+                    if (result != System.Windows.MessageBoxResult.Yes)
+                        return;
+
+                    foreach (Recipe r in modifyRecipes)
+                    {
+                        Beverage reference = r.Ingredients.First(x => x.GUID == SelectedBeverage.GUID);
+
+                        r.Ingredients.Remove(reference);
+                    }
+
+                    foreach (Recipe removeR in (new List<Recipe>(deleteRecipes)))
+                    {
+                        _mainVM.VMRecipe.ListRecipes.Remove(removeR);
+                    }
+                }
+
+                ListBeverages.Remove(SelectedBeverage);
+                _mainVM.SaveCurrentState();
+            }
+        }
+
+        public void AddBeverage()
+        {
+            Beverage newBeverage = new Beverage
+            {
+                AmountTimeCoefficient = 1,
+                GUID = System.Guid.NewGuid().ToString(),
+                Name = "New Beverage"
+            };
+
+            ListBeverages.Add(newBeverage);
+
+            SelectedBeverage = newBeverage;
+
+            IsEditEnabled = true;
+        }
+
+        public void CancelEdit()
+        {
+            this.IsEditEnabled = false;
+            this.SelectedBeverage = this.SelectedBeverage;
+        }
 
         private bool _isEditEnabled;
 
@@ -128,6 +218,12 @@ namespace CocktailMixerWPFMaster
         public void LoadFromCMState(CMGlobalState state)
         {
             ListBeverages = new ObservableCollection<Beverage>(state.BeverageDataBase);
+            IsEditEnabled = false;
+
+            if (SelectedBeverage != null)
+            {
+                SelectedBeverage = ListBeverages.FirstOrDefault(x => x.GUID == SelectedBeverage.GUID);
+            }
         }
     }
 }

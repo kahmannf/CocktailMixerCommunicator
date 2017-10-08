@@ -70,5 +70,25 @@ namespace CocktailMixerWPFMaster
         {
             (this.DataContext as MainViewModel).VMBeverage.IsEditEnabled = (this.DataContext as MainViewModel).VMBeverage.SelectedBeverage != null;
         }
+
+        private void ButtonCancelBaverage_Click(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as MainViewModel).VMBeverage.CancelEdit();
+        }
+
+        private void ButtonSaveBeverage_Click(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as MainViewModel).VMBeverage.SaveBeverage();
+        }
+
+        private void ButtonAddNewBeverage_Click(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as MainViewModel).VMBeverage.AddBeverage();
+        }
+
+        private void ButtonDeleteBeverage_Click(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as MainViewModel).VMBeverage.DeleteBeverage();
+        }
     }
 }
