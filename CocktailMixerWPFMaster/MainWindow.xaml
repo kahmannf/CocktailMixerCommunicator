@@ -8,6 +8,65 @@
         Title="CocktailMixer Controller" Height="450" MinHeight="450" Width="790" MinWidth="790">
     <Grid>
         <TabControl>
+            <TabItem Header="Beverages" DataContext="{Binding VMBeverage}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="37" />
+                    </Grid.RowDefinitions>
+
+                    <ListBox ItemsSource="{Binding ListBeverages}" SelectedItem="{Binding SelectedBeverage}" DisplayMemberPath="Name" IsEnabled="{Binding IsSelectionEnabled}"></ListBox>
+
+                    <Grid Grid.Row="1" IsEnabled="{Binding IsSelectionEnabled}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Button Margin="5,5,2.5,5" Click="ButtonAddNewBeverage_Click">Add</Button>
+                        <Button Grid.Column="1" Margin="2.5,5,2.5,5" Click="ButtonEdit_Click">Edit</Button>
+                        <Button Grid.Column="2" Margin="2.5,5,5,5" Click="ButtonDeleteBeverage_Click">Delete</Button>
+                    </Grid>
+
+                    <GroupBox Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Header="Beverage" IsEnabled="{Binding IsEditEnabled}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0">
+                                <Label Height="27" Margin="5,5,0,0" Content="Name" />
+                                <Label Height="27" Margin="5,5,0,0" Content="Alcohol volume %" />
+                                <Label Height="27" Margin="5,5,0,0" Content="Amount time ratio" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="1" >
+                                <TextBox Height="27" Margin="5,5,5,0" Grid.Column="1" Grid.Row="0"
+                                     Text="{Binding SelectedName, Mode=TwoWay}" 
+                                     Width="400" HorizontalAlignment="Right" />
+                                <TextBox Height="27" Margin="5,5,5,0" Grid.Column="1" Grid.Row="0"
+                                     Text="{Binding SelectedAlcVol, Mode=TwoWay}" 
+                                     Width="400" HorizontalAlignment="Right" />
+                                <TextBox Height="27" Margin="5,5,5,0" Grid.Column="1" Grid.Row="0"
+                                     Text="{Binding SelectedAmountTimeRatio, Mode=TwoWay}" 
+                                     Width="400" HorizontalAlignment="Right" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5,15,5,0" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1">
+                                <Button Height="27" Width="150" Content="Cancel" Click="ButtonCancelBaverage_Click" />
+                                <Button Height="27" Width="150" Margin="5,0,0,0" Content="Save" Click="ButtonSaveBeverage_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                </Grid>
+            </TabItem>
             <TabItem Header="Recipes" DataContext="{Binding VMRecipe}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -78,65 +137,6 @@
                         <Button Margin="2.5,5,2.5,5" Grid.Column="1" Content="Edit" Click="ButtonEditRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
                         <Button Margin="2.5,5,5,5" Grid.Column="2" Content="Delete" Click="ButtonDeleteRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
                     </Grid>
-                    
-                </Grid>
-            </TabItem>
-            <TabItem Header="Beverages" DataContext="{Binding VMBeverage}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="180" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="37" />
-                    </Grid.RowDefinitions>
-
-                    <ListBox ItemsSource="{Binding ListBeverages}" SelectedItem="{Binding SelectedBeverage}" DisplayMemberPath="Name" IsEnabled="{Binding IsSelectionEnabled}"></ListBox>
-
-                    <Grid Grid.Row="1" IsEnabled="{Binding IsSelectionEnabled}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Button Margin="5,5,2.5,5" Click="ButtonAddNewBeverage_Click">Add</Button>
-                        <Button Grid.Column="1" Margin="2.5,5,2.5,5" Click="ButtonEdit_Click">Edit</Button>
-                        <Button Grid.Column="2" Margin="2.5,5,5,5" Click="ButtonDeleteBeverage_Click">Delete</Button>
-                    </Grid>
-
-                    <GroupBox Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Header="Beverage" IsEnabled="{Binding IsEditEnabled}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="120" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0">
-                                <Label Height="27" Margin="5,5,0,0" Content="Name" />
-                                <Label Height="27" Margin="5,5,0,0" Content="Alcohol volume %" />
-                                <Label Height="27" Margin="5,5,0,0" Content="Amount time ratio" />
-                            </StackPanel>
-                            <StackPanel Grid.Row="0" Grid.Column="1" >
-                                <TextBox Height="27" Margin="5,5,5,0" Grid.Column="1" Grid.Row="0"
-                                     Text="{Binding SelectedName, Mode=TwoWay}" 
-                                     Width="400" HorizontalAlignment="Right" />
-                                <TextBox Height="27" Margin="5,5,5,0" Grid.Column="1" Grid.Row="0"
-                                     Text="{Binding SelectedAlcVol, Mode=TwoWay}" 
-                                     Width="400" HorizontalAlignment="Right" />
-                                <TextBox Height="27" Margin="5,5,5,0" Grid.Column="1" Grid.Row="0"
-                                     Text="{Binding SelectedAmountTimeRatio, Mode=TwoWay}" 
-                                     Width="400" HorizontalAlignment="Right" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="5,15,5,0" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1">
-                                <Button Height="27" Width="150" Content="Cancel" Click="ButtonCancelBaverage_Click" />
-                                <Button Height="27" Width="150" Margin="5,0,0,0" Content="Save" Click="ButtonSaveBeverage_Click" />
-                            </StackPanel>
-                        </Grid>
-                    </GroupBox>
                     
                 </Grid>
             </TabItem>
