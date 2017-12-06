@@ -20,7 +20,7 @@
             
         </ListBox>
 
-        <Label Margin="5,0,0,5" Height="27" Content="Amount (ml):" Grid.Row="1"></Label>
+        <Label Margin="5,0,0,5" Height="27" Content="Parts:" Grid.Row="1"></Label>
         <TextBox Margin="5,0,10,5" Grid.Column="1" Height="27" Grid.Row="1" Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         
         

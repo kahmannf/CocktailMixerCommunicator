@@ -89,6 +89,8 @@ namespace CocktailMixerCommunicator.Model
         public List<Beverage> BeverageDataBase { get; set; }
         public List<Recipe> Recipes { get; set; }
 
+        public byte CompressorPortId { get; set; } = 0;
+
         /// <summary>
         /// Supposed to be called when the state changes. 
         /// Will save the current state in the associated CMState-file
@@ -142,7 +144,7 @@ namespace CocktailMixerCommunicator.Model
                                                            {
                                                                GUID = ingredient.GUID,
                                                                AlcoholVolPercentage = beverage.AlcoholVolPercentage,
-                                                               Amount = ingredient.Amount,
+                                                               RatioAmount = ingredient.RatioAmount,
                                                                Name = beverage.Name,
                                                                AmountTimeCoefficient = beverage.AmountTimeCoefficient
                                                            };
@@ -312,6 +314,18 @@ namespace CocktailMixerCommunicator.Model
                 return "Uninitialized CMState:" + base.ToString();
 
             return $"CMState Loaded Items: Recipies:{Recipes.Count}; Beverages: {BeverageDataBase.Count}; SupplySlots: {Supply.Count}";
+        }
+
+        public int MapSlotToPort(int slotId)
+        {
+            if (slotId <= 5)//slot B0 - B5
+            {
+                return slotId;
+            }
+            else
+            {
+                return slotId + 4; //slot d2 - d8
+            }
         }
     }
 }

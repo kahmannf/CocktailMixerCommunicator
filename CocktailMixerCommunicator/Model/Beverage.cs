@@ -19,14 +19,19 @@ namespace CocktailMixerCommunicator.Model
         /// </summary>
         public double AmountTimeCoefficient { get; set; }
 
-        public double Amount { get; set; }
+        /// <summary>
+        /// 'Parts' of this liquid used in a request
+        /// e.g.: Order 200ml Havana Cola with 3 part cola and 1 part havana
+        /// -> 150ml Cola, 50 ml Havana
+        /// </summary>
+        public int RatioAmount { get; set; }
 
         public override string ToString()
         {
             if (string.IsNullOrEmpty(Name))
                 return base.ToString();
 
-            return $"Beverage: {Name}; Amount={Amount}";
+            return $"Beverage: {Name}; RatioAmount={RatioAmount}";
         }
     }
 }

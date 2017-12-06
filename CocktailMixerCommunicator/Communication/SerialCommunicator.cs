@@ -28,6 +28,8 @@ namespace CocktailMixerCommunicator.Communication
         public string PortName => _serialPort.PortName;
         public int BaudRate => _serialPort.BaudRate;
 
+        public event EventHandler<string> StatusMessageChanged;
+
         public SerialCommunicator(string portName, int baudRate)
         {
             _serialPort = new SerialPort(portName, baudRate);
@@ -35,54 +37,66 @@ namespace CocktailMixerCommunicator.Communication
             _serialPort.StopBits = StopBits.One;
         }
 
-        public Task<int> SendRequestAsync(IEnumerable<Beverage> beverages, CMGlobalState state)
+        public Task<int> SendRequestAsync(Beverage b, int amountInMl, CMGlobalState state)
         {
-            return Task.Run(() => SendRequest(beverages, state));
+            return Task.Run(() => SendRequest(b, amountInMl, state));
         }
 
-        public int SendRequest(IEnumerable<Beverage> beverages, CMGlobalState state)
+        public int SendRequest(Beverage b, int amountInMl, CMGlobalState state)
         {
             try
             {
                 _serialPort.Open();
+                
+                MixerSupplyItem supplyItem = state.Supply.FirstOrDefault(x => x.GUID_Beverage == b.GUID);
 
-                foreach (Beverage b in beverages)
+                if (supplyItem == null)
                 {
-                    MixerSupplyItem supplyItem = state.Supply.FirstOrDefault(x => x.GUID_Beverage == b.GUID);
-
-                    if (supplyItem == null)
-                    {
-                        throw new ArgumentException("Can only use beverages that are in the supply");
-                    }
-
-                    Console.WriteLine($"Dispnsing Beverage: {b.Name}, {b.Amount} ml");
-
-                    _serialPort.Write(new byte[] { (byte)supplyItem.SupplySlotID }, 0, 1);
-                    _serialPort.BaseStream.Flush();
-
-                    _serialPort.Write(new byte[] { 1 }, 0, 1);
-                    _serialPort.BaseStream.Flush();
-
-                    int remainingTime = Convert.ToInt32(b.AmountTimeCoefficient * b.Amount);
-
-                    remainingTime -= remainingTime % 10;
-
-
-                    for (; remainingTime > 0; remainingTime--)
-                    {
-                        if (remainingTime % 10 == 0)
-                            Console.WriteLine(remainingTime / 10 + " seconds remaining");
-
-                        System.Threading.Thread.Sleep(100);
-                    }
-
-
-                    _serialPort.Write(new byte[] { (byte)supplyItem.SupplySlotID }, 0, 1);
-                    _serialPort.BaseStream.Flush();
-
-                    _serialPort.Write(new byte[] { 0 }, 0, 1);
-                    _serialPort.BaseStream.Flush();
+                    throw new ArgumentException("Can only use beverages that are in the supply");
                 }
+
+                StatusMessageChanged?.Invoke(this, $"Dispnsing Beverage: {b.Name}, {amountInMl} ml");
+
+                byte portId = (byte)state.MapSlotToPort(supplyItem.SupplySlotID);
+
+                _serialPort.Write(new byte[] { state.CompressorPortId }, 0, 1); //enable compressor
+                _serialPort.BaseStream.Flush();
+
+                _serialPort.Write(new byte[] { 1 }, 0, 1);
+                _serialPort.BaseStream.Flush();
+
+
+                _serialPort.Write(new byte[] { portId }, 0, 1); //open slot valve
+                _serialPort.BaseStream.Flush();
+
+                _serialPort.Write(new byte[] { 1 }, 0, 1);
+                _serialPort.BaseStream.Flush();
+
+                int remainingTime = Convert.ToInt32(b.AmountTimeCoefficient * amountInMl);
+
+                remainingTime -= remainingTime % 10;
+
+
+                for (; remainingTime > 0; remainingTime -= 10)
+                {
+
+                    StatusMessageChanged?.Invoke(this, remainingTime / 10 + " seconds remaining");
+
+                    System.Threading.Thread.Sleep(100);
+                }
+
+
+                _serialPort.Write(new byte[] { portId }, 0, 1);//clsoe slot valve
+                _serialPort.BaseStream.Flush();
+
+                _serialPort.Write(new byte[] { 0 }, 0, 1);
+                _serialPort.BaseStream.Flush();
+
+                _serialPort.Write(new byte[] { state.CompressorPortId }, 0, 1); //disable compressor
+                _serialPort.BaseStream.Flush();
+
+                _serialPort.Write(new byte[] { 0 }, 0, 1);
+                _serialPort.BaseStream.Flush();
 
                 _serialPort.Close();
 

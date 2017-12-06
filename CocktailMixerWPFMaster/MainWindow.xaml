@@ -8,6 +8,12 @@
         Title="CocktailMixer Controller" Height="450" MinHeight="450" Width="790" MinWidth="790">
     <Grid>
         <TabControl>
+            <TabItem Header="Order">
+                <Grid>
+                    <Button Width="150" Height="40" Content="Start Serving-Mode"></Button>
+                    
+                </Grid>
+            </TabItem>
             <TabItem Header="Beverages" DataContext="{Binding VMBeverage}">
                 <Grid>
                     <Grid.ColumnDefinitions>

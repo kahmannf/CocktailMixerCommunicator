@@ -25,9 +25,9 @@
         </StackPanel>
 
         <StackPanel Grid.Column="1">
-            <TextBox  Height="22" Margin="0,29.5,5,0" Text="{Binding COMPortName}" />
-            <TextBox  Height="22" Margin="0,5,5,0" Text="{Binding BaudRate}"/>
-            <TextBox  Height="22" Margin="0,5,5,0" Text="{Binding CMStateDirectory}" />
+            <TextBox  Height="22" Margin="0,29.5,5,0" Text="{Binding COMPortName, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox  Height="22" Margin="0,5,5,0" Text="{Binding BaudRate, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox  Height="22" Margin="0,5,5,0" Text="{Binding CMStateDirectory, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
 
         <Label Grid.Row="1" Content="{Binding ErrorMessage}"></Label>

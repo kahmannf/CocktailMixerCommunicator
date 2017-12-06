@@ -122,7 +122,7 @@ namespace CocktailMixerWPFMaster
             SelectedBeverage.Name = SelectedName;
             SelectedBeverage.AlcoholVolPercentage = SelectedAlcVol;
             SelectedBeverage.AmountTimeCoefficient = SelectedAmountTimeRatio;
-            SelectedBeverage.Amount = 0;
+            SelectedBeverage.RatioAmount = 0;
 
             _mainVM.SaveCurrentState();
 

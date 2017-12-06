@@ -15,32 +15,18 @@ namespace CocktailMixerCommunicator.Communication
     {
         public List<Beverage> Beverages { get; private set; }
 
-        public Recipe Recipe { get; private set; }
+        public int Amount { get; set; }
 
-        public Request(Recipe r)
+        public Request(Recipe r, int amountInML)
+            : this(r.Ingredients, amountInML)
         {
-            Recipe = r;
         }
 
-        public Request(List<Beverage> beverages)
+        public Request(List<Beverage> beverages, int amountInML)
         {
             Beverages = beverages;
         }
 
-        /// <summary>
-        /// Converts the Request into cmcli commandline parameters as string
-        /// </summary>
-        /// <returns></returns>
-        public string ToParameter()
-        {
-            if (Beverages == null || Beverages.Count == 0)
-            {
-                return Recipe.ToParameters();
-            }
-            else
-            {
-                return Beverages.ToParameters();
-            }
-        }
+        
     }
 }

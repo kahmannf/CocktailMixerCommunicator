@@ -17,11 +17,14 @@ namespace CocktailMixerCommunicator.Communication
     {
         FILO<Request> _queue = new FILO<Request>();
 
-        public void Start(string cmcliLocation)
+        SerialCommunicator serialComm;
+
+        public void Start(string portname, int baudRate)
         {
             if (_run)
                 throw new InvalidOperationException("RequestHandler already running");
 
+            serialComm = new SerialCommunicator(portname, baudRate);
             _run = true;
             RunInternal();
         }
@@ -39,53 +42,32 @@ namespace CocktailMixerCommunicator.Communication
         /// Add a REquest to the queue
         /// </summary>
         /// <param name="request"></param>
-        public void POST(Request request)
+        public void POST(Request request, CMGlobalState currentState)
         {
+            State = currentState;
             _queue.Push(request);
         }
 
         private bool _run = false;
-        /// <summary>
-        /// path to the cmcli.exe
-        /// </summary>
-        private string _cmcliLocation;
+
+        public CMGlobalState State { get; set; }
 
         private void RunInternal()
         {
             Task.Run(() =>
             {
+
                 while (_run)
                 {
                     if (_queue.HasItems)
                     {
                         Request request = _queue.Pull();
 
-                        Process cmcli = new Process();
+                        int totalParts = request.Beverages.Select(z => z.RatioAmount).Aggregate((x, y) => x+ y);
 
-                        ProcessStartInfo startinfo = new ProcessStartInfo(_cmcliLocation, request.ToParameter());
-
-                        cmcli.StartInfo = startinfo;
-
-                        cmcli.Start();
-
-                        cmcli.WaitForExit();
-
-                        int resetcount = 0;
-
-                        while (cmcli.ExitCode != 0 && resetcount < 3)
+                        foreach (Beverage b in request.Beverages)
                         {
-                            cmcli.StartInfo.Arguments = " reset";
-
-                            resetcount++;
-
-                            cmcli.Start();
-
-                            cmcli.WaitForExit();
-                        }
-
-                        if (resetcount == 3 && cmcli.ExitCode != 0)
-                        {
-                            throw new Exception("Failed to reset arduino after failed execution");
+                            serialComm.SendRequest(b, (int)(((double)request.Amount) * (((double)b.RatioAmount) / ((double)totalParts))), State);
                         }
 
                         //Wait 5 seconds befor serving another drink

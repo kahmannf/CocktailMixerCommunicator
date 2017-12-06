@@ -36,7 +36,7 @@ namespace CocktailMixerWPFMaster.Dialogs
             if (this.DataContext is SelectBeverageViewModel vm)
             {
                 SelectedBeverage = vm.SelectedBeverage;
-                SelectedBeverage.Amount = vm.Amount;
+                SelectedBeverage.RatioAmount = vm.Amount;
                 this.DialogResult = SelectedBeverage != null;
             }
         }

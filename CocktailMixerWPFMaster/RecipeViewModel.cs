@@ -1,5 +1,4 @@
-﻿using CocktailMixerCLI;
-using CocktailMixerCommunicator.Model;
+﻿using CocktailMixerCommunicator.Model;
 using CocktailMixerWPFMaster.Dialogs;
 using System;
 using System.Collections.Generic;

@@ -61,6 +61,10 @@
     </Compile>
     <Compile Include="Dialogs\SelectBeverageViewModel.cs" />
     <Compile Include="RecipeViewModel.cs" />
+    <Compile Include="ServingModeViewModel.cs" />
+    <Compile Include="UserControlServingMode.xaml.cs">
+      <DependentUpon>UserControlServingMode.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\SelectBeverageDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -86,6 +90,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControlServingMode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -114,10 +122,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CocktailMixerCLI\CocktailMixerCLI.csproj">
-      <Project>{8258e5f8-1130-4eee-b1f3-9ee29ce38313}</Project>
-      <Name>CocktailMixerCLI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CocktailMixerCommunicator\CocktailMixerCommunicator.csproj">
       <Project>{881719a0-d845-48be-beeb-29b861216087}</Project>
       <Name>CocktailMixerCommunicator</Name>

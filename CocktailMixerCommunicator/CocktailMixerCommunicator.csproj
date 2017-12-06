@@ -50,6 +50,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Model\Beverage.cs" />
     <Compile Include="Model\CMGlobalState.cs" />
+    <Compile Include="Model\Configuration.cs" />
     <Compile Include="Model\MixerSupplyItem.cs" />
     <Compile Include="Model\Recipe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

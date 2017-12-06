@@ -1,5 +1,4 @@
-﻿using CocktailMixerCLI;
-using CocktailMixerCommunicator.Model;
+﻿using CocktailMixerCommunicator.Model;
 using CocktailMixerWPFMaster.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -17,19 +16,20 @@ namespace CocktailMixerWPFMaster
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private string _configFileName => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config.xml");
+
         private void NotifyPropertyChanged([CallerMemberName]string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+        private Configuration _config;
+
+        public Configuration Config => _config;
 
         public void LoadData()
         {
-            string baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            string cmcliConfigFileName = Path.Combine(baseDir, CMCLI.CONFIG_FILE_NAME);
-
-            if (!File.Exists(cmcliConfigFileName))
+            if (!File.Exists(_configFileName))
             {
                 SetCLIConfigDialog dialog = new SetCLIConfigDialog();
 
@@ -41,25 +41,21 @@ namespace CocktailMixerWPFMaster
                 }
                 else
                 {
-                    SetCLIConfig(dialog.DataContext as SetCLIConfigViewModel);
+                    SetConfig(dialog.DataContext as SetCLIConfigViewModel);
                 }
             }
-
-            if (CMCLI.Configuration == null)
+            else
             {
-                CMCLI.LoadOrCreateConfig();
+                _config = Configuration.LoadFromPath(_configFileName);
             }
+            
 
             VMRecipe = new RecipeViewModel(this);
 
             VMBeverage = new BeverageViewModel(this);
+            
 
-            if (!File.Exists(Path.Combine(CMCLI.Configuration.CMStateDirectory, CMGlobalState.CMSTATE_FILENAME)))
-            {
-                CMGlobalState.CreateNew(CMCLI.Configuration.CMStateDirectory);
-            }
-
-            CMGlobalState state = CMGlobalState.LoadStateFromFile(CMCLI.Configuration.CMStateDirectory);
+            CMGlobalState state = CMGlobalState.LoadStateFromFile(_config.CMStateDirectory);
 
             VMRecipe.LoadFromCMState(state);
 
@@ -67,24 +63,18 @@ namespace CocktailMixerWPFMaster
         }
 
 
-        public void SetCLIConfig(SetCLIConfigViewModel vm)
+        public void SetConfig(SetCLIConfigViewModel vm)
         {
-            string[] args = new string[] { "config", "set", "", "" };
+            Configuration config = new Configuration()
+            {
+                BaudRate = vm.BaudRate,
+                CMStateDirectory = vm.CMStateDirectory,
+                COMPort = vm.COMPortName,
+            };
 
-            args[2] = "serialport";
-            args[3] = vm.COMPortName;
+            _config = config;
 
-            CMCLI.Main(args);
-
-            args[2] = "baudrate";
-            args[3] = vm.BaudRate.ToString();
-
-            CMCLI.Main(args);
-
-            args[2] = "statedir";
-            args[3] = vm.CMStateDirectory;
-
-            CMCLI.Main(args);
+            Configuration.SaveToPath(_configFileName, config);
         }
 
         private RecipeViewModel _vmRecipe;
@@ -121,7 +111,8 @@ namespace CocktailMixerWPFMaster
             //todo update this
             state.Supply = new List<MixerSupplyItem>();
 
-            state.ApplyChanges(CMCLI.Configuration.CMStateDirectory);
+            throw new Exception();
+            state.ApplyChanges(string.Empty);
 
             //saving may update some properties
             VMRecipe.LoadFromCMState(state);
