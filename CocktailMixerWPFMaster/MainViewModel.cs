@@ -53,7 +53,9 @@ namespace CocktailMixerWPFMaster
             VMRecipe = new RecipeViewModel(this);
 
             VMBeverage = new BeverageViewModel(this);
-            
+
+            VMServingMode = new ServingModeViewModel(this);
+
 
             CMGlobalState state = CMGlobalState.LoadStateFromFile(_config.CMStateDirectory);
 
@@ -100,6 +102,19 @@ namespace CocktailMixerWPFMaster
                 NotifyPropertyChanged();
             }
         }
+
+        private ServingModeViewModel _vmServingMode;
+
+        public ServingModeViewModel VMServingMode
+        {
+            get { return _vmServingMode; }
+            set
+            {
+                _vmServingMode = value;
+                NotifyPropertyChanged();
+            }
+        }
+
 
         public void SaveCurrentState()
         {

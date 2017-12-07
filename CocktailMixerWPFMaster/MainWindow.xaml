@@ -11,7 +11,7 @@
             <TabItem Header="Order">
                 <Grid>
                     <Button Width="150" Height="40" Content="Start Serving-Mode"></Button>
-                    
+                    <local:UserControlServingMode DataContext="{Binding VMServingMode}"></local:UserControlServingMode>
                 </Grid>
             </TabItem>
             <TabItem Header="Beverages" DataContext="{Binding VMBeverage}">

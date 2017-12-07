@@ -15,6 +15,8 @@ namespace CocktailMixerWPFMaster
 
         private MainViewModel _vmMain;
 
+        public MainViewModel VMMain => _vmMain;
+
         public ServingModeViewModel(MainViewModel vmmain)
         {
             _vmMain = vmmain;
