@@ -28,7 +28,7 @@ namespace CocktailMixerWPFMaster
 
             this.DataContext = vm;
 
-            vm.LoadData();
+            vm.InitData();
         }
 
         private void ButtonAddRecipe_Click(object sender, RoutedEventArgs e)
@@ -89,6 +89,68 @@ namespace CocktailMixerWPFMaster
         private void ButtonDeleteBeverage_Click(object sender, RoutedEventArgs e)
         {
             (this.DataContext as MainViewModel).VMBeverage.DeleteBeverage();
+        }
+
+        private void ButtonFillSlot_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b && b.DataContext is SupplySlotView slotView)
+            {
+                (this.DataContext as MainViewModel)?.VMSupply?.FillSlot(slotView);
+            }
+        }
+
+        private void ButtonClearSlot_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b && b.DataContext is SupplySlotView slotView)
+            {
+                (this.DataContext as MainViewModel)?.VMSupply?.ClearSlot(slotView);
+            }
+        }
+
+        private void ButtonOpenSlot_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b && b.DataContext is SupplySlotView slotView)
+            {
+                (this.DataContext as MainViewModel)?.VMSupply?.OpenSlot(slotView.SupplyItem.SupplySlotID);
+            }
+        }
+
+        private void ButtonCloseSlot_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b && b.DataContext is SupplySlotView slotView)
+            {
+                (this.DataContext as MainViewModel)?.VMSupply?.CloseSlot(slotView.SupplyItem.SupplySlotID);
+            }
+        }
+
+        private void ButtonSaveSupplySettings_Click(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as MainViewModel)?.VMSupply?.SaveSettings();
+        }
+
+        private void ButtonCloseAll_Click(object sender, RoutedEventArgs e)
+        {
+            MainViewModel vmmain = (this.DataContext as MainViewModel);
+
+            vmmain.VMSupply.CloseAllSlots();
+        }
+
+        private void ButtonOpenCompressor_Click(object sender, RoutedEventArgs e)
+        {
+            MainViewModel vmmain = (this.DataContext as MainViewModel);
+
+            CocktailMixerCommunicator.Model.CMGlobalState state = CocktailMixerCommunicator.Model.CMGlobalState.LoadStateFromFile(vmmain.Config.CMStateDirectory);
+
+            vmmain.VMSupply.OpenSlot(state.CompressorPortId);
+        }
+
+        private void ButtonCloseCompressor_Click(object sender, RoutedEventArgs e)
+        {
+            MainViewModel vmmain = (this.DataContext as MainViewModel);
+
+            CocktailMixerCommunicator.Model.CMGlobalState state = CocktailMixerCommunicator.Model.CMGlobalState.LoadStateFromFile(vmmain.Config.CMStateDirectory);
+
+            vmmain.VMSupply.CloseSlot(state.CompressorPortId);
         }
     }
 }

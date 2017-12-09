@@ -5,12 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CocktailMixerWPFMaster"
         mc:Ignorable="d"
-        Title="CocktailMixer Controller" Height="450" MinHeight="450" Width="790" MinWidth="790">
+        Title="CocktailMixer Controller" Height="600" MinHeight="600" Width="1000" MinWidth="1000">
     <Grid>
         <TabControl>
             <TabItem Header="Order">
                 <Grid>
-                    <Button Width="150" Height="40" Content="Start Serving-Mode"></Button>
                     <local:UserControlServingMode DataContext="{Binding VMServingMode}"></local:UserControlServingMode>
                 </Grid>
             </TabItem>
@@ -143,6 +142,79 @@
                         <Button Margin="2.5,5,2.5,5" Grid.Column="1" Content="Edit" Click="ButtonEditRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
                         <Button Margin="2.5,5,5,5" Grid.Column="2" Content="Delete" Click="ButtonDeleteRecipe_Click" IsEnabled="{Binding IsSelectionEnabled}"></Button>
                     </Grid>
+                    
+                </Grid>
+            </TabItem>
+            <TabItem Header="Supply" DataContext="{Binding VMSupply}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid x:Name="GridGeneralSettings">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel>
+                            <Label Height="26" Margin="5,5,0,0" Content="Amount of Supply-Slots"></Label>
+                            <Label Height="26" Margin="5,5,0,0" Content="Compressor Port-ID"></Label>
+                            <Label Height="26" Margin="5,5,0,0" Content="Waste-Gate Port-ID"></Label>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <TextBox Height="26" Margin="5,5,0,0" Text="{Binding SupplySlotAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                            <TextBox Height="26" Margin="5,5,0,0" Text="{Binding CompressorPortId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                            <TextBox Height="26" Margin="5,5,0,0" Text="{Binding WasteGatePortId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                            <Button Height="26" Margin="5,5,0,0" Width="90" Content="Save" HorizontalAlignment="Right" Click="ButtonSaveSupplySettings_Click"></Button>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <Button Margin="5,5,0,0" Height="26" Content="Close All slots" Click="ButtonCloseAll_Click" />
+                            <Button Margin="5,5,0,0" Height="26" Content="Open Compressor Slot" Click="ButtonOpenCompressor_Click" />
+                            <Button Margin="5,5,0,0" Height="26" Content="Close Compressor Slot" Click="ButtonCloseCompressor_Click" />
+                        </StackPanel>
+                        
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding SupplyItemViews}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Width="200">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="31" />
+                                            <RowDefinition Height="31" />
+                                            <RowDefinition Height="31" />
+                                            <RowDefinition Height="31" />
+                                            <RowDefinition Height="31" />
+                                            <RowDefinition Height="31" />
+                                            <RowDefinition Height="31" />
+                                        </Grid.RowDefinitions>
+                                        <Label Content="{Binding SupplyItem.SupplySlotID}" HorizontalAlignment="Center" Margin="2.5"></Label>
+                                        <Label Content="{Binding Beverage.Name}" Grid.Row="1" HorizontalAlignment="Center" Margin="2.5"></Label>
+                                        <Label Content="{Binding SupplyItem.AmountMLLeft}" Grid.Row="2" HorizontalAlignment="Center" Margin="2.5"></Label>
+                                        <Button Margin="2.5" Grid.Row="3" Content="Fill Slot" Click="ButtonFillSlot_Click"></Button>
+                                        <Button Margin="2.5" Grid.Row="4" Content="Clear Slot" Click="ButtonClearSlot_Click"></Button>
+                                        <Button Margin="2.5" Grid.Row="5" Content="Open Valve" Click="ButtonOpenSlot_Click"></Button>
+                                        <Button Margin="2.5" Grid.Row="6" Content="Close Valve" Click="ButtonCloseSlot_Click"></Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                     
                 </Grid>
             </TabItem>

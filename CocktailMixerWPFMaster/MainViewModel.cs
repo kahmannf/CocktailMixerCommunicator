@@ -27,7 +27,7 @@ namespace CocktailMixerWPFMaster
 
         public Configuration Config => _config;
 
-        public void LoadData()
+        public void InitData()
         {
             if (!File.Exists(_configFileName))
             {
@@ -48,20 +48,39 @@ namespace CocktailMixerWPFMaster
             {
                 _config = Configuration.LoadFromPath(_configFileName);
             }
-            
 
-            VMRecipe = new RecipeViewModel(this);
+
+            VMServingMode = new ServingModeViewModel(this);
 
             VMBeverage = new BeverageViewModel(this);
 
-            VMServingMode = new ServingModeViewModel(this);
+            VMRecipe = new RecipeViewModel(this);
+
+            VMSupply = new SupplyViewModel(this);
 
 
             CMGlobalState state = CMGlobalState.LoadStateFromFile(_config.CMStateDirectory);
 
+            UpdateCMState(state);
+
+            CMGlobalState.StateChangesSaved += (sender, e) =>
+            {
+                if (sender is CMGlobalState senderState)
+                {
+                    UpdateCMState(senderState);
+                }
+            };
+        }
+
+        private void UpdateCMState(CMGlobalState state)
+        {
             VMRecipe.LoadFromCMState(state);
 
             VMBeverage.LoadFromCMState(state);
+
+            VMSupply.LoadFromCMState(state);
+
+            VMServingMode.LoadFromCMState(state);
         }
 
 
@@ -115,23 +134,36 @@ namespace CocktailMixerWPFMaster
             }
         }
 
+        private SupplyViewModel _vmSupply;
+
+        public SupplyViewModel VMSupply
+        {
+            get { return _vmSupply; }
+            set
+            {
+                _vmSupply = value;
+                NotifyPropertyChanged();
+            }
+        }
+
 
         public void SaveCurrentState()
         {
-            CMGlobalState state = new CMGlobalState();
+            CMGlobalState state = CMGlobalState.LoadStateFromFile(Config.CMStateDirectory);
 
             state.BeverageDataBase = new List<Beverage>(_vmBeverage.ListBeverages);
             state.Recipes = new List<Recipe>(_vmRecipe.ListRecipes);
 
             //todo update this
-            state.Supply = new List<MixerSupplyItem>();
+            //state.Supply = new List<MixerSupplyItem>();
 
-            throw new Exception();
-            state.ApplyChanges(string.Empty);
+            state.ApplyChanges(Config.CMStateDirectory);
 
-            //saving may update some properties
-            VMRecipe.LoadFromCMState(state);
-            VMBeverage.LoadFromCMState(state);
+            //saving will now invoke a event which will cause the vms to refresh
+            ////saving may update some properties
+            //VMRecipe.LoadFromCMState(state);
+            //VMBeverage.LoadFromCMState(state);
+            //VMSupply.LoadFromCMState(state);
         }
     }
 }

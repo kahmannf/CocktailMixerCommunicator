@@ -16,6 +16,8 @@ namespace CocktailMixerCommunicator.Model
         /// </summary>
         public int SupplySlotID { get; set; }
 
+        public int AmountMLLeft { get; set; }
+
         public override string ToString()
         {
             return $"SlotID: {SupplySlotID}";

@@ -32,45 +32,23 @@ namespace CocktailMixerWPFMaster
 
         private void ButtonTest_Click(object sender, RoutedEventArgs e)
         {
-            VmMain = (this.DataContext as ServingModeViewModel).VMMain;
+            (this.DataContext as ServingModeViewModel).OrderDummyTest();
+        }
 
-            string dir = VmMain.Config.CMStateDirectory;
-            CMGlobalState.CreateNew(dir);
+        private void ButtonRecipes_Click(object sender, RoutedEventArgs e)
+        {
 
-            CMGlobalState state = CMGlobalState.LoadStateFromFile(dir);
+            (this.DataContext as ServingModeViewModel).ShowRecipes();
+        }
 
-            Beverage wasser1 = new Beverage()
-            {
-                AlcoholVolPercentage = 0,
-                AmountTimeCoefficient = 1,
-                GUID = Guid.NewGuid().ToString(),
-                Name = "Wasser1",
-                RatioAmount = 0
-            };
+        private void ButtonBeverages_Click(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as ServingModeViewModel).ShowBeverages();
+        }
 
-            Beverage wasser2 = new Beverage()
-            {
-                AlcoholVolPercentage = 0,
-                AmountTimeCoefficient = 1,
-                GUID = Guid.NewGuid().ToString(),
-                Name = "Wasser2",
-                RatioAmount = 0
-            };
-
-            state.AddBeverageToDatabase(wasser1, dir);
-            state.AddBeverageToDatabase(wasser2, dir);
-
-            state.CompressorPortId = 0;
-            state.ApplyChanges(dir);
-
-            state.SetSupplySlot(wasser1.GUID, 1, dir);
-            state.SetSupplySlot(wasser2.GUID, 2, dir);
-
-            SerialCommunicator com = new SerialCommunicator(VmMain.Config.COMPort, VmMain.Config.BaudRate);
-
-            com.SendRequest(wasser1, 100, state);
-            com.SendRequest(wasser2, 400, state);
-
+        private void ButtonBackToSelection_Click(object sender, RoutedEventArgs e)
+        {
+            (this.DataContext as ServingModeViewModel).BackToSelection();
         }
     }
 }

@@ -42,15 +42,18 @@ namespace CocktailMixerCommunicator.Communication
         /// Add a REquest to the queue
         /// </summary>
         /// <param name="request"></param>
-        public void POST(Request request, CMGlobalState currentState)
+        public void POST(Request request, CMGlobalState currentState, string cmstateDirectory)
         {
             State = currentState;
+            StateDirectory = cmstateDirectory;
             _queue.Push(request);
         }
 
         private bool _run = false;
 
         public CMGlobalState State { get; set; }
+
+        public string StateDirectory { get; set; }
 
         private void RunInternal()
         {
@@ -67,7 +70,9 @@ namespace CocktailMixerCommunicator.Communication
 
                         foreach (Beverage b in request.Beverages)
                         {
-                            serialComm.SendRequest(b, (int)(((double)request.Amount) * (((double)b.RatioAmount) / ((double)totalParts))), State);
+                            int amountML = (int)(((double)request.Amount) * (((double)b.RatioAmount) / ((double)totalParts)));
+
+                            serialComm.SendRequest(b, amountML, State, StateDirectory);
                         }
 
                         //Wait 5 seconds befor serving another drink

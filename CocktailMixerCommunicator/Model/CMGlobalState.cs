@@ -62,17 +62,20 @@ namespace CocktailMixerCommunicator.Model
 
                 #endregion
 
-                using (FileStream fs = new FileStream(filepath, FileMode.Open))
+                lock (fileLock)
                 {
-                    byte[] data = new byte[fs.Length];
+                    using (FileStream fs = new FileStream(filepath, FileMode.Open))
+                    {
+                        byte[] data = new byte[fs.Length];
 
-                    fs.Read(data, 0, (int)fs.Length);
+                        fs.Read(data, 0, (int)fs.Length);
 
-                    CMGlobalState state = (CMGlobalState)data;
+                        CMGlobalState state = (CMGlobalState)data;
 
-                    state.SortLists();
+                        state.SortLists();
 
-                    return state;
+                        return state;
+                    }
                 }
             }
             catch (InvalidCastException icex)
@@ -90,6 +93,10 @@ namespace CocktailMixerCommunicator.Model
         public List<Recipe> Recipes { get; set; }
 
         public byte CompressorPortId { get; set; } = 0;
+        public byte WasteGatePortId { get; set; } = 1;
+        public int SupplySlotAmount { get; set; } = 4;
+
+        private static object fileLock = new object();
 
         /// <summary>
         /// Supposed to be called when the state changes. 
@@ -121,17 +128,26 @@ namespace CocktailMixerCommunicator.Model
                 //update the recipes (in case of changes to the beverages)
                 UpdateRecipeIngredients();
 
-                using (FileStream fs = new FileStream(Path.Combine(directorypath, CMSTATE_FILENAME), FileMode.OpenOrCreate))
+                //Normalize supply slots
+                UpdateSupplySlots();
+                lock (fileLock)
                 {
-                    byte[] data = (byte[])this;
-                    fs.Write(data, 0, data.Length);
+                    using (FileStream fs = new FileStream(Path.Combine(directorypath, CMSTATE_FILENAME), FileMode.Create))
+                    {
+                        byte[] data = (byte[])this;
+                        fs.Write(data, 0, data.Length);
+                    }
                 }
+
+                StateChangesSaved?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
                 throw new Exception("Failed to apply the changes of the CMState to the CMState-file", ex);
             }
         }
+
+        public static event EventHandler StateChangesSaved;
 
         private void UpdateRecipeIngredients()
         {
@@ -153,6 +169,23 @@ namespace CocktailMixerCommunicator.Model
             }
         }
 
+        private void UpdateSupplySlots()
+        {
+            for (int i = 0; i < SupplySlotAmount; i++)
+            {
+                if (!Supply.Any(x => x.SupplySlotID == i) && MapSlotToPort(i) != CompressorPortId && MapSlotToPort(i) != WasteGatePortId)
+                {
+                    Supply.Add(new MixerSupplyItem() { SupplySlotID = i });
+                }
+            }
+
+            IEnumerable<MixerSupplyItem> removeitems = Supply.Where(x => x.SupplySlotID >= SupplySlotAmount || MapSlotToPort(x.SupplySlotID) == CompressorPortId || MapSlotToPort(x.SupplySlotID) == WasteGatePortId);
+
+            foreach (MixerSupplyItem item in removeitems.ToList())
+            {
+                Supply.Remove(item);
+            }
+        }
 
         /// <summary>
         /// Serializes a CMGlobalState object using a BinaryFormatter
@@ -193,7 +226,7 @@ namespace CocktailMixerCommunicator.Model
             ApplyChanges(directorypath);
         }
 
-        public void SetSupplySlot(string guid_beverage, int supplySlotID, string directorypath)
+        public void SetSupplySlot(string guid_beverage, int amountMl, int supplySlotID, string directorypath)
         {
             if (BeverageDataBase.FirstOrDefault(x => x.GUID == guid_beverage) == null)
             {
@@ -203,10 +236,11 @@ namespace CocktailMixerCommunicator.Model
             if (Supply.FirstOrDefault(x => x.SupplySlotID == supplySlotID) is MixerSupplyItem item)
             {
                 item.GUID_Beverage = guid_beverage;
+                item.AmountMLLeft = amountMl;
             }
             else
             {
-                Supply.Add(new MixerSupplyItem() { GUID_Beverage = guid_beverage, SupplySlotID = supplySlotID });
+                Supply.Add(new MixerSupplyItem() { GUID_Beverage = guid_beverage, SupplySlotID = supplySlotID, AmountMLLeft = amountMl });
             }
 
             ApplyChanges(directorypath);
@@ -316,16 +350,35 @@ namespace CocktailMixerCommunicator.Model
             return $"CMState Loaded Items: Recipies:{Recipes.Count}; Beverages: {BeverageDataBase.Count}; SupplySlots: {Supply.Count}";
         }
 
-        public int MapSlotToPort(int slotId)
+        public static byte MapSlotToPort(int slotId)
         {
             if (slotId <= 5)//slot B0 - B5
             {
-                return slotId;
+                return (byte)slotId;
             }
             else
             {
-                return slotId + 4; //slot d2 - d8
+                return (byte)(slotId + 4); //slot d2 - d8
             }
+        }
+
+        public bool HasAmount(Beverage b, int amountML)
+        {
+            return Supply?.FirstOrDefault(x => x.GUID_Beverage == b.GUID) is MixerSupplyItem item && item.AmountMLLeft >= amountML;
+        }
+
+        public void RemoveAmount(Beverage b, int amountML, string stateDir)
+        {
+            if (!HasAmount(b, amountML))
+            {
+                throw new InvalidOperationException("Not enough ofbeverage to remove");
+            }
+
+            MixerSupplyItem item = Supply.FirstOrDefault(x => x.GUID_Beverage == b.GUID);
+
+            item.AmountMLLeft -= amountML;
+
+            ApplyChanges(stateDir);
         }
     }
 }

@@ -5,8 +5,36 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CocktailMixerWPFMaster"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="600">
     <Grid>
-        <Button Click="ButtonTest_Click" Content="test"></Button>  
+        <Grid x:Name="GridModeSelection" Visibility="{Binding ModeSelectionVisibility}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Click="ButtonRecipes_Click" Width="200" Height="100" Content="Recipes"></Button>
+            <Button Click="ButtonBeverages_Click" Grid.Column="1" Width="200" Height="100" Content="Beverages"></Button>
+        </Grid> 
+        <Grid x:Name="GridContentRecipes" Visibility="{Binding ContentRecipesVisibility}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Content="&lt;- Back to Mode-Selection" Height="30" VerticalAlignment="Top" Margin="5" Click="ButtonBackToSelection_Click"></Button>
+            <ListBox Margin="5,40,0,5" ItemsSource="{Binding Recipes}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedRecipe}" ></ListBox>
+
+            <local:ServingDetails Grid.Column="1"></local:ServingDetails>
+            
+        </Grid>
+        <Grid x:Name="GridContentBeverages" Visibility="{Binding ContentBeveragesVisibility}">
+
+        </Grid>
+        <Grid x:Name="GridServing" Visibility="{Binding ServingVisibility}">
+            <StackPanel Orientation="Vertical">
+                <ListView Background="LightGreen" ItemsSource="{Binding ServedIngredients}" BorderBrush="Transparent" DisplayMemberPath="Name"></ListView>
+                <ListView Background="Orange" ItemsSource="{Binding PouringIngredients}" BorderBrush="Transparent" DisplayMemberPath="Name"></ListView>
+                <ListView Background="Transparent" ItemsSource="{Binding RemainingIngredients}" BorderBrush="Transparent" DisplayMemberPath="Name"></ListView>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

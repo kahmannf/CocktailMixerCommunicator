@@ -61,7 +61,12 @@
     </Compile>
     <Compile Include="Dialogs\SelectBeverageViewModel.cs" />
     <Compile Include="RecipeViewModel.cs" />
+    <Compile Include="ServingDetails.xaml.cs">
+      <DependentUpon>ServingDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ServingModeViewModel.cs" />
+    <Compile Include="SupplySlotView.cs" />
+    <Compile Include="SupplyViewModel.cs" />
     <Compile Include="UserControlServingMode.xaml.cs">
       <DependentUpon>UserControlServingMode.xaml</DependentUpon>
     </Compile>
@@ -90,6 +95,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ServingDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControlServingMode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
