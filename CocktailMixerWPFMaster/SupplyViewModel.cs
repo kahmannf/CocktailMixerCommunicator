@@ -137,14 +137,28 @@ namespace CocktailMixerWPFMaster
 
         public void OpenSlot(int slotId)
         {
-            SerialCommunicator com = new SerialCommunicator(_vmMain.Config.COMPort, _vmMain.Config.BaudRate);
-            com.OpenSlot(slotId);
+            try
+            {
+                SerialCommunicator com = new SerialCommunicator(_vmMain.Config.COMPort, _vmMain.Config.BaudRate);
+                com.OpenSlot(slotId);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error");
+            }
         }
 
         public void CloseSlot(int slotId)
         {
-            SerialCommunicator com = new SerialCommunicator(_vmMain.Config.COMPort, _vmMain.Config.BaudRate);
-            com.CloseSlot(slotId);
+            try
+            {
+                SerialCommunicator com = new SerialCommunicator(_vmMain.Config.COMPort, _vmMain.Config.BaudRate);
+                com.CloseSlot(slotId);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error");
+            }
         }
 
         public void CloseAllSlots()

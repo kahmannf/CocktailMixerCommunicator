@@ -157,6 +157,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="200" />
                             <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="150" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         
@@ -181,7 +182,12 @@
                             <Button Margin="5,5,0,0" Height="26" Content="Open Compressor Slot" Click="ButtonOpenCompressor_Click" />
                             <Button Margin="5,5,0,0" Height="26" Content="Close Compressor Slot" Click="ButtonCloseCompressor_Click" />
                         </StackPanel>
-                        
+
+                        <StackPanel Grid.Column="3">
+                            <Button Margin="5,5,0,0" Height="26" Content="Open Waste-Gate Slot" Click="ButtonOpenWasteGate_Click" />
+                            <Button Margin="5,5,0,0" Height="26" Content="Close Waste-Gate Slot" Click="ButtonCloseWasteGate_Click" />
+                        </StackPanel>
+
                     </Grid>
 
                     <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">

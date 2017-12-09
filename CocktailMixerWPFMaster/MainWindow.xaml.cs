@@ -152,5 +152,23 @@ namespace CocktailMixerWPFMaster
 
             vmmain.VMSupply.CloseSlot(state.CompressorPortId);
         }
+
+        private void ButtonOpenWasteGate_Click(object sender, RoutedEventArgs e)
+        {
+            MainViewModel vmmain = (this.DataContext as MainViewModel);
+
+            CocktailMixerCommunicator.Model.CMGlobalState state = CocktailMixerCommunicator.Model.CMGlobalState.LoadStateFromFile(vmmain.Config.CMStateDirectory);
+
+            vmmain.VMSupply.OpenSlot(state.WasteGatePortId);
+        }
+
+        private void ButtonCloseWasteGate_Click(object sender, RoutedEventArgs e)
+        {
+            MainViewModel vmmain = (this.DataContext as MainViewModel);
+
+            CocktailMixerCommunicator.Model.CMGlobalState state = CocktailMixerCommunicator.Model.CMGlobalState.LoadStateFromFile(vmmain.Config.CMStateDirectory);
+
+            vmmain.VMSupply.CloseSlot(state.WasteGatePortId);
+        }
     }
 }
