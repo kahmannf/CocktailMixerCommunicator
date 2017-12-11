@@ -27,7 +27,7 @@ namespace CocktailMixerWPFMaster
 
             MissingIngredientsVisibility = Visibility.Collapsed;
 
-            GlassSizeInMl = 200;
+            GlassSizeInMl = 300;
         }
 
         #region Visibilities
@@ -157,7 +157,7 @@ namespace CocktailMixerWPFMaster
             {
                 _glassSizeInMl = value;
                 NotifyPropertyChanged("GlassSizeInMl");
-                SetMixStatus();
+                SetMixStatus(true);
             }
         }
 
@@ -273,13 +273,19 @@ namespace CocktailMixerWPFMaster
             ModeSelectionVisibility = Visibility.Visible;
         }
 
-        private void SetMixStatus()
+        private void SetMixStatus(bool glassSizeSender = false)
         {
             bool result = false;
             if (GlassSizeInMl > 0)
             {
                 if (SelectedRecipe != null && SelectedRecipe.Ingredients != null && SelectedRecipe.Ingredients.Count > 0)
                 {
+                    if (SelectedRecipe.DefaultAmountML != 0 && !glassSizeSender)
+                    {
+                        GlassSizeInMl = SelectedRecipe.DefaultAmountML;
+                        return; // Setting the glasssize will call this method again
+                    }
+
                     CMGlobalState state = CMGlobalState.LoadStateFromFile(_vmMain.Config.CMStateDirectory);
 
                     int totalParts = SelectedRecipe.Ingredients.Select(x => x.RatioAmount).Aggregate((y, z) => y + z);

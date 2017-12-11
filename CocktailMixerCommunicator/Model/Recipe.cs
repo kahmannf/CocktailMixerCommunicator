@@ -18,6 +18,8 @@ namespace CocktailMixerCommunicator.Model
 
         public string Name { get; set; }
 
+        public int DefaultAmountML { get; set; }
+
         public string ToParameters()
         {
             return $" order cname \"{Name}\" ";

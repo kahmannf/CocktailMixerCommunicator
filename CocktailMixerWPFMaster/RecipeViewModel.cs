@@ -68,6 +68,10 @@ namespace CocktailMixerWPFMaster
                 {
                     SelectedName = _selecteRecipe.Name;
                     SelectedIngredients = new ObservableCollection<Beverage>(_selecteRecipe.Ingredients);
+
+                    
+                    SelectedDefaultAmount = _selecteRecipe.DefaultAmountML;
+                    
                 }
                 else
                 {
@@ -168,6 +172,7 @@ namespace CocktailMixerWPFMaster
 
             SelectedRecipe.Ingredients = new List<Beverage>(SelectedIngredients);
             SelectedRecipe.Name = SelectedName;
+            SelectedRecipe.DefaultAmountML = SelectedDefaultAmount;
 
             _mainVM.SaveCurrentState();
 
@@ -188,6 +193,19 @@ namespace CocktailMixerWPFMaster
                 NotifyPropertyChanged();
             }
         }
+
+        private int _selectedDefaultAmount;
+
+        public int SelectedDefaultAmount
+        {
+            get { return _selectedDefaultAmount; }
+            set
+            {
+                _selectedDefaultAmount = value;
+                NotifyPropertyChanged();
+            }
+        }
+
 
         private ObservableCollection<Beverage> _selectedIngredients;
 
