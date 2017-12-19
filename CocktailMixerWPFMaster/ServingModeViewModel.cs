@@ -269,8 +269,8 @@ namespace CocktailMixerWPFMaster
 
         public void BackToSelection()
         {
-            ContentRecipesVisibility = ContentBeveragesVisibility = ServingVisibility = Visibility.Collapsed;
-            ModeSelectionVisibility = Visibility.Visible;
+            ModeSelectionVisibility = ContentBeveragesVisibility = ServingVisibility = Visibility.Collapsed;
+            ContentRecipesVisibility = Visibility.Visible;
         }
 
         private void SetMixStatus(bool glassSizeSender = false)

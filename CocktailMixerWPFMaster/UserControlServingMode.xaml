@@ -20,8 +20,8 @@
                 <ColumnDefinition Width="300" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Content="&lt;- Back to Mode-Selection" Height="30" VerticalAlignment="Top" Margin="5" Click="ButtonBackToSelection_Click"></Button>
-            <ListBox Margin="5,40,0,5" ItemsSource="{Binding Recipes}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedRecipe}" ></ListBox>
+            <Button Visibility="Collapsed" Content="&lt;- Back to Mode-Selection" Height="30" VerticalAlignment="Top" Margin="5" Click="ButtonBackToSelection_Click"></Button>
+            <ListBox Margin="5,5,0,5" ItemsSource="{Binding Recipes}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedRecipe}" ></ListBox>
 
             <local:ServingDetails Grid.Column="1"></local:ServingDetails>
             
