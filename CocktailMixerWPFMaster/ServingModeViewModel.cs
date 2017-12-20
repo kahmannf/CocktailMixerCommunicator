@@ -288,17 +288,13 @@ namespace CocktailMixerWPFMaster
 
                     CMGlobalState state = CMGlobalState.LoadStateFromFile(_vmMain.Config.CMStateDirectory);
 
-                    int totalParts = SelectedRecipe.Ingredients.Select(x => x.RatioAmount).Aggregate((y, z) => y + z);
-
-                    IEnumerable<Beverage> missingIngredients = SelectedRecipe.Ingredients.Where(x => !state.HasAmount(x, (int)((GlassSizeInMl) * ((x.RatioAmount) / ((double)totalParts)))));
-
-                    MissingIngredients = new List<Beverage>(missingIngredients);
+                    MissingIngredients = new List<Beverage>(state.GetMissingIngredients(SelectedRecipe));
                     MissingIngredientsVisibility = MissingIngredients.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
-                    AvailableIngredients = new List<Beverage>(SelectedRecipe.Ingredients.Except(missingIngredients));
+                    AvailableIngredients = new List<Beverage>(SelectedRecipe.Ingredients.Except(MissingIngredients));
                     AvailableIngredientsVisibility = AvailableIngredients.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
-                    if (missingIngredients.Count() == 0)
+                    if (MissingIngredients.Count() == 0)
                     {
                         result = true;
                         MixStatus = "Can be mixed.";

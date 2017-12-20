@@ -1,4 +1,5 @@
 ﻿using CocktailMixerCommunicator.Model;
+using CocktailMixerCommunicator.Web;
 using CocktailMixerWPFMaster.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -70,6 +71,15 @@ namespace CocktailMixerWPFMaster
                     UpdateCMState(senderState);
                 }
             };
+
+            _webCom = new WebCommunicator(_config);
+            _webCom.MixCocktailRequested += _webCom_MixCocktailRequested;
+        }
+
+        private void _webCom_MixCocktailRequested(object sender, Recipe e)
+        {
+            VMServingMode.SelectedRecipe = VMServingMode.Recipes.FirstOrDefault(x => x.Name == e.Name);
+            VMServingMode.MixIt();
         }
 
         private void UpdateCMState(CMGlobalState state)
@@ -164,6 +174,26 @@ namespace CocktailMixerWPFMaster
             //VMRecipe.LoadFromCMState(state);
             //VMBeverage.LoadFromCMState(state);
             //VMSupply.LoadFromCMState(state);
+        }
+
+        private WebCommunicator _webCom;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>current status of the webCommunicator</returns>
+        public bool ToggleListener()
+        {
+            if (_webCom.Running)
+            {
+                _webCom.StopListening();
+                return false;
+            }
+            else
+            {
+                _webCom.StartListening();
+                return true;
+            }
         }
     }
 }

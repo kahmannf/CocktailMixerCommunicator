@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CocktailMixerCommunicator.Web;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -169,6 +170,22 @@ namespace CocktailMixerWPFMaster
             CocktailMixerCommunicator.Model.CMGlobalState state = CocktailMixerCommunicator.Model.CMGlobalState.LoadStateFromFile(vmmain.Config.CMStateDirectory);
 
             vmmain.VMSupply.CloseSlot(state.WasteGatePortId);
+        }
+
+        private void ButtonListener_Click(object sender, RoutedEventArgs e)
+        {
+            Button b = sender as Button;
+
+            if ((this.DataContext as MainViewModel).ToggleListener())
+            {
+                b.Content = "Stop Listening";
+                b.Background = new SolidColorBrush(Color.FromRgb(142, 22, 40));
+            }
+            else
+            {
+                b.Content = "Start Listening";
+                b.Background = new SolidColorBrush(Color.FromRgb(22, 142, 80));
+            }
         }
     }
 }

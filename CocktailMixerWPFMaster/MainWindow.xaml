@@ -229,6 +229,11 @@
                     
                 </Grid>
             </TabItem>
+            <TabItem Header="Remote Control">
+                <Grid>
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="100" Content="Start Listening" Foreground="White" Background="#168e50" Click="ButtonListener_Click"></Button>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

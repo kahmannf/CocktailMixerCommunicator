@@ -380,5 +380,12 @@ namespace CocktailMixerCommunicator.Model
 
             ApplyChanges(stateDir);
         }
+
+        public IEnumerable<Beverage> GetMissingIngredients(Recipe recipe)
+        {
+            int totalParts = recipe.Ingredients.Select(x => x.RatioAmount).Aggregate((y, z) => y + z);
+
+            return recipe.Ingredients.Where(x => !HasAmount(x, (int)((recipe.DefaultAmountML) * ((x.RatioAmount) / ((double)totalParts)))));
+        }
     }
 }
