@@ -1,4 +1,6 @@
-﻿using CocktailMixerCommunicator.Web;
+﻿using CocktailMixerCommunicator;
+using CocktailMixerCommunicator.Web;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CocktailMixerCommunicator.Model;
 
 namespace CocktailMixerWPFMaster
 {
@@ -185,6 +188,18 @@ namespace CocktailMixerWPFMaster
             {
                 b.Content = "Start Listening";
                 b.Background = new SolidColorBrush(Color.FromRgb(22, 142, 80));
+            }
+        }
+
+        private void ButtonExportState_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.AddExtension = true;
+            sfd.DefaultExt = ".json";
+
+            if (sfd.ShowDialog() is bool b && b)
+            {
+                DataExport.ExportCmGlobalState(sfd.FileName, CMGlobalState.LoadStateFromFile((this.DataContext as MainViewModel).Config.CMStateDirectory));
             }
         }
     }

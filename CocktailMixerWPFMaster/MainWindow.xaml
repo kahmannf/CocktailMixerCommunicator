@@ -234,6 +234,11 @@
                     <Button HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="100" Content="Start Listening" Foreground="White" Background="#168e50" Click="ButtonListener_Click"></Button>
                 </Grid>
             </TabItem>
+            <TabItem Header="Config">
+                <StackPanel>
+                    <Button Width="200" Margin="5,5,0,0" Content="Export CMState" Click="ButtonExportState_Click"></Button>
+                </StackPanel>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

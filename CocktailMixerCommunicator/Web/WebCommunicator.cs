@@ -54,7 +54,7 @@ namespace CocktailMixerCommunicator.Web
         private void RunInternal()
         {
             HttpListener listener = new HttpListener();
-            listener.Prefixes.Add("http://localhost:5000");
+            listener.Prefixes.Add("http://localhost:5000/");
 
             listener.Start();
 
@@ -74,6 +74,7 @@ namespace CocktailMixerCommunicator.Web
                 {
                     listenerContext.Response.StatusCode = 423; //HttpStatus 423 = LOCKED
                     listenerContext.Response.OutputStream.Write("Already mixing!".Select(x => (byte)x).ToArray(), 0, 15);
+                    listenerContext.Response.OutputStream.Close();
                 }
                 else
                 {
@@ -90,6 +91,7 @@ namespace CocktailMixerCommunicator.Web
                         {
                             listenerContext.Response.StatusCode = 202; //HttpStatus 202 = Created
                             listenerContext.Response.OutputStream.Write("Created".Select(x => (byte)x).ToArray(), 0, 7);
+                            listenerContext.Response.OutputStream.Close();
 
                             try
                             {
@@ -134,12 +136,14 @@ namespace CocktailMixerCommunicator.Web
                         {
                             listenerContext.Response.StatusCode = 410; //HttpStatus 410 = Gone
                             listenerContext.Response.OutputStream.Write("Gone".Select(x => (byte)x).ToArray(), 0, 4);
+                            listenerContext.Response.OutputStream.Close();
                         }
                     }
                     else
                     {
                         listenerContext.Response.StatusCode = 400; //HttpStatus 400 = BadRequest
                         listenerContext.Response.OutputStream.Write("Bad Request".Select(x => (byte)x).ToArray(), 0, 11);
+                        listenerContext.Response.OutputStream.Close();
                     }
 
                     _mixing = false;

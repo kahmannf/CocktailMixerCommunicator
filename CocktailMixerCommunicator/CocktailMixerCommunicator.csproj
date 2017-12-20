@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="RandomUtilities">
       <HintPath>..\..\RandomUtilities\RandomUtilities\bin\Debug\RandomUtilities.dll</HintPath>
     </Reference>
@@ -48,6 +49,7 @@
     <Compile Include="Communication\Request.cs" />
     <Compile Include="Communication\RequestHandler.cs" />
     <Compile Include="Communication\SerialCommunicator.cs" />
+    <Compile Include="DataExport.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Model\Beverage.cs" />
     <Compile Include="Model\CMGlobalState.cs" />

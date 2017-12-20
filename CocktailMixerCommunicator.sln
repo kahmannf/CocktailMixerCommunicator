@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CocktailMixerCommunicator", "CocktailMixerCommunicator\CocktailMixerCommunicator.csproj", "{881719A0-D845-48BE-BEEB-29B861216087}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CocktailMixerCLI", "CocktailMixerCLI\CocktailMixerCLI.csproj", "{8258E5F8-1130-4EEE-B1F3-9EE29CE38313}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CocktailMixerWPFMaster", "CocktailMixerWPFMaster\CocktailMixerWPFMaster.csproj", "{FD30437F-0326-4862-9010-A7DE2712A1A7}"
 EndProject
@@ -26,10 +24,6 @@ Global
 		{881719A0-D845-48BE-BEEB-29B861216087}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{881719A0-D845-48BE-BEEB-29B861216087}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{881719A0-D845-48BE-BEEB-29B861216087}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8258E5F8-1130-4EEE-B1F3-9EE29CE38313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8258E5F8-1130-4EEE-B1F3-9EE29CE38313}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8258E5F8-1130-4EEE-B1F3-9EE29CE38313}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8258E5F8-1130-4EEE-B1F3-9EE29CE38313}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD30437F-0326-4862-9010-A7DE2712A1A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD30437F-0326-4862-9010-A7DE2712A1A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD30437F-0326-4862-9010-A7DE2712A1A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,5 +31,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {71CFCA6C-F146-4461-99E1-A23EE974E5B8}
 	EndGlobalSection
 EndGlobal

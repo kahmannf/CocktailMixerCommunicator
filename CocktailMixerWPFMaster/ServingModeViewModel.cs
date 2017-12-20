@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace CocktailMixerWPFMaster
 {
@@ -19,9 +20,13 @@ namespace CocktailMixerWPFMaster
 
         private MainViewModel _vmMain;
 
+        private Dispatcher _dispatcher;
+
         public ServingModeViewModel(MainViewModel vmmain)
         {
             _vmMain = vmmain;
+
+            _dispatcher = Dispatcher.CurrentDispatcher;
 
             BackToSelection();
 
@@ -343,8 +348,8 @@ namespace CocktailMixerWPFMaster
                     while (RemainingIngredients.Count > 0)
                     {
                         Beverage b = RemainingIngredients.First();
-                        RemainingIngredients.Remove(b);
-                        PouringIngredients.Add(b);
+                        await _dispatcher.BeginInvoke((Action)(() => RemainingIngredients.Remove(b)));
+                        await _dispatcher.BeginInvoke((Action)(() => PouringIngredients.Add(b)));
 
                         int amount = (int)((double)GlassSizeInMl * b.RatioAmount / (double)totalParts);
 
@@ -353,9 +358,9 @@ namespace CocktailMixerWPFMaster
                         if(first)
                             first = false;
 
-                        PouringIngredients.Remove(b);
+                        await _dispatcher.BeginInvoke((Action)(() => PouringIngredients.Remove(b)));
 
-                        ServedIngredients.Add(b);
+                        await _dispatcher.BeginInvoke((Action)(() => ServedIngredients.Add(b)));
                     }
 
                 }
