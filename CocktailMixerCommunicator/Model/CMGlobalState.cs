@@ -92,8 +92,9 @@ namespace CocktailMixerCommunicator.Model
         public List<Beverage> BeverageDataBase { get; set; }
         public List<Recipe> Recipes { get; set; }
 
-        public byte CompressorPortId { get; set; } = 0;
-        public byte WasteGatePortId { get; set; } = 1;
+        public int CompressorPortId { get; set; } = 3;
+        public int WasteGatePortId { get; set; } = 2;
+        public int AirFlowValvePortId { get; set; } = 4;
         public int SupplySlotAmount { get; set; } = 4;
 
         private static object fileLock = new object();
@@ -173,13 +174,13 @@ namespace CocktailMixerCommunicator.Model
         {
             for (int i = 0; i < SupplySlotAmount; i++)
             {
-                if (!Supply.Any(x => x.SupplySlotID == i) && MapSlotToPort(i) != CompressorPortId && MapSlotToPort(i) != WasteGatePortId)
+                if (!Supply.Any(x => x.SupplySlotID == i) && MapSlotToPort(i) != CompressorPortId && MapSlotToPort(i) != WasteGatePortId && MapSlotToPort(i) != AirFlowValvePortId)
                 {
                     Supply.Add(new MixerSupplyItem() { SupplySlotID = i });
                 }
             }
 
-            IEnumerable<MixerSupplyItem> removeitems = Supply.Where(x => x.SupplySlotID >= SupplySlotAmount || MapSlotToPort(x.SupplySlotID) == CompressorPortId || MapSlotToPort(x.SupplySlotID) == WasteGatePortId);
+            IEnumerable<MixerSupplyItem> removeitems = Supply.Where(x => x.SupplySlotID >= SupplySlotAmount || MapSlotToPort(x.SupplySlotID) == CompressorPortId || MapSlotToPort(x.SupplySlotID) == WasteGatePortId || MapSlotToPort(x.SupplySlotID) == AirFlowValvePortId);
 
             foreach (MixerSupplyItem item in removeitems.ToList())
             {

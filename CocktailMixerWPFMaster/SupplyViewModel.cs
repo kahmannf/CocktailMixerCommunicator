@@ -29,6 +29,7 @@ namespace CocktailMixerWPFMaster
             SupplySlotAmount = state.SupplySlotAmount;
             WasteGatePortId = state.WasteGatePortId;
             CompressorPortId = state.CompressorPortId;
+            AirFlowPortId = state.AirFlowValvePortId;
             _mixerSupplyItems = state.Supply;
             _beverages = state.BeverageDataBase;
 
@@ -51,9 +52,9 @@ namespace CocktailMixerWPFMaster
             }
         }
 
-        private byte _compressorPortId;
+        private int _compressorPortId;
 
-        public byte CompressorPortId
+        public int CompressorPortId
         {
             get { return _compressorPortId; }
             set
@@ -63,14 +64,26 @@ namespace CocktailMixerWPFMaster
             }
         }
 
-        private byte _wasteGatePortId;
+        private int _wasteGatePortId;
 
-        public byte WasteGatePortId
+        public int WasteGatePortId
         {
             get { return _wasteGatePortId; }
             set
             {
                 _wasteGatePortId = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        private int _airFlowPortId;
+
+        public int AirFlowPortId
+        {
+            get { return _airFlowPortId; }
+            set
+            {
+                _airFlowPortId = value;
                 NotifyPropertyChanged();
             }
         }
@@ -129,6 +142,7 @@ namespace CocktailMixerWPFMaster
                 state.SupplySlotAmount = SupplySlotAmount;
                 state.CompressorPortId = CompressorPortId;
                 state.WasteGatePortId = WasteGatePortId;
+                state.AirFlowValvePortId = AirFlowPortId;
 
                 state.ApplyChanges(_vmMain.Config.CMStateDirectory);
                 

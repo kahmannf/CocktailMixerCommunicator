@@ -22,7 +22,7 @@ namespace CocktailMixerCommunicator.Communication
         [Obsolete("This header is not in use any longer", true)]
         private readonly byte[] HEADER_TEMPLATE = "KAFACMH".Select(x => (byte)x).ToArray();
 
-        public const int COMPRESSOR_PREASURE_BUILD_TIME_MS = 5000;
+        public const int COMPRESSOR_PREASURE_BUILD_TIME_MS = 1000;
 
         /// <summary>
         /// Reference to the serialport object that is used for communication
@@ -47,30 +47,50 @@ namespace CocktailMixerCommunicator.Communication
 
         public void OpenSlot(int slotId)
         {
-            _serialPort.Open();
-
-            _serialPort.Write(new byte[] { CMGlobalState.MapSlotToPort(slotId) }, 0, 1); //enable compressor
-            _serialPort.BaseStream.Flush();
-
-            _serialPort.Write(new byte[] { 1 }, 0, 1);
-            _serialPort.BaseStream.Flush();
-
-            _serialPort.Close();
+            OpenPort(CMGlobalState.MapSlotToPort(slotId), true); 
         }
 
         public void CloseSlot(int slotId)
         {
-            _serialPort.Open();
-
-            _serialPort.Write(new byte[] { CMGlobalState.MapSlotToPort(slotId) }, 0, 1); //enable compressor
-            _serialPort.BaseStream.Flush();
-
-            _serialPort.Write(new byte[] { 0 }, 0, 1);
-            _serialPort.BaseStream.Flush();
-
-            _serialPort.Close();
+            ClosePort(CMGlobalState.MapSlotToPort(slotId), true);
         }
 
+        private void OpenPort(byte portId, bool openPort = false)
+        {
+            if (openPort)
+                _serialPort.Open();
+
+            if (portId >= 0)
+            {
+                _serialPort.Write(new byte[] { portId }, 0, 1);
+                _serialPort.BaseStream.Flush();
+
+                _serialPort.Write(new byte[] { 1 }, 0, 1);
+                _serialPort.BaseStream.Flush();
+            }
+
+            if (openPort)
+                _serialPort.Close();
+        }
+
+        private void ClosePort(byte portId, bool openPort = false)
+        {
+            if(openPort)
+                _serialPort.Open();
+
+            if (portId >= 0)
+            {
+
+                _serialPort.Write(new byte[] { portId }, 0, 1);
+                _serialPort.BaseStream.Flush();
+
+                _serialPort.Write(new byte[] { 0 }, 0, 1);
+                _serialPort.BaseStream.Flush();
+            }
+
+            if(openPort)
+                _serialPort.Close();
+        }
 
         public int SendRequest(Beverage b, int amountInMl, CMGlobalState state, string stateDir, bool first = true, bool last = true)
         {
@@ -92,24 +112,17 @@ namespace CocktailMixerCommunicator.Communication
 
                 byte portId = CMGlobalState.MapSlotToPort(supplyItem.SupplySlotID);
 
-                if (first)
-                {
-                    _serialPort.Write(new byte[] { state.CompressorPortId }, 0, 1); //enable compressor
-                    _serialPort.BaseStream.Flush();
 
-                    _serialPort.Write(new byte[] { 1 }, 0, 1);
-                    _serialPort.BaseStream.Flush();
+                OpenPort((byte)state.AirFlowValvePortId);
 
-                    Thread.Sleep(COMPRESSOR_PREASURE_BUILD_TIME_MS); //build up some preasure
-                }
 
-                _serialPort.Write(new byte[] { portId }, 0, 1); //open slot valve
-                _serialPort.BaseStream.Flush();
+                OpenPort((byte)state.CompressorPortId);
 
-                _serialPort.Write(new byte[] { 1 }, 0, 1);
-                _serialPort.BaseStream.Flush();
+                Thread.Sleep(COMPRESSOR_PREASURE_BUILD_TIME_MS); //build up some preasure
 
-                int remainingTime = Convert.ToInt32(b.AmountTimeCoefficient * amountInMl * 3.3); 
+                OpenPort(portId);
+            
+                int remainingTime = Convert.ToInt32(b.AmountTimeCoefficient * amountInMl * 5.9); 
 
                 remainingTime -= remainingTime % 10;
 
@@ -122,39 +135,20 @@ namespace CocktailMixerCommunicator.Communication
                     Thread.Sleep(100);
                 }
 
+                ClosePort((byte)state.CompressorPortId);
 
-                _serialPort.Write(new byte[] { portId }, 0, 1);//clsoe slot valve
-                _serialPort.BaseStream.Flush();
+                ClosePort((byte)state.AirFlowValvePortId);
 
-                _serialPort.Write(new byte[] { 0 }, 0, 1);
-                _serialPort.BaseStream.Flush();
+                OpenPort((byte)state.WasteGatePortId);
+
+                Thread.Sleep(RandomUtilities.MathUtil.Util.TakeLarger(2000, (int)(amountInMl * ((b.AmountTimeCoefficient - 1 * 2) + 1) * 18))); //reduce preasure
+
+                ClosePort(portId);
+
+                ClosePort((byte)state.WasteGatePortId);
 
                 state.RemoveAmount(b, amountInMl, stateDir);
 
-                if (last)
-                {
-
-                    _serialPort.Write(new byte[] { state.CompressorPortId }, 0, 1); //disable compressor
-                    _serialPort.BaseStream.Flush();
-
-                    _serialPort.Write(new byte[] { 0 }, 0, 1);
-                    _serialPort.BaseStream.Flush();
-
-                    _serialPort.Write(new byte[] { state.WasteGatePortId }, 0, 1); //open wastegate
-                    _serialPort.BaseStream.Flush();
-
-                    _serialPort.Write(new byte[] { 1 }, 0, 1);
-                    _serialPort.BaseStream.Flush();
-
-                    Thread.Sleep(4000); //reduce preasure
-
-                    _serialPort.Write(new byte[] { state.WasteGatePortId }, 0, 1); //close wastegate
-                    _serialPort.BaseStream.Flush();
-
-                    _serialPort.Write(new byte[] { 0 }, 0, 1);
-                    _serialPort.BaseStream.Flush();
-
-                }
                 _serialPort.Close();
 
                 return 0;

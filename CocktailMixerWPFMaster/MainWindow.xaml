@@ -173,22 +173,27 @@
                             <Label Height="26" Margin="5,5,0,0" Content="Amount of Supply-Slots"></Label>
                             <Label Height="26" Margin="5,5,0,0" Content="Compressor Port-ID"></Label>
                             <Label Height="26" Margin="5,5,0,0" Content="Waste-Gate Port-ID"></Label>
+                            <Label Height="26" Margin="5,5,0,0" Content="Airflow-Valve Port-ID"></Label>
                         </StackPanel>
 
                         <StackPanel Grid.Column="1">
                             <TextBox Height="26" Margin="5,5,0,0" Text="{Binding SupplySlotAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                             <TextBox Height="26" Margin="5,5,0,0" Text="{Binding CompressorPortId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                             <TextBox Height="26" Margin="5,5,0,0" Text="{Binding WasteGatePortId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                            <TextBox Height="26" Margin="5,5,0,0" Text="{Binding AirFlowPortId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                             <Button Height="26" Margin="5,5,0,0" Width="90" Content="Save" HorizontalAlignment="Right" Click="ButtonSaveSupplySettings_Click"></Button>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">
-                            <Button Margin="5,5,0,0" Height="26" Content="Close All slots" Click="ButtonCloseAll_Click" />
                             <Button Margin="5,5,0,0" Height="26" Content="Open Compressor Slot" Click="ButtonOpenCompressor_Click" />
                             <Button Margin="5,5,0,0" Height="26" Content="Close Compressor Slot" Click="ButtonCloseCompressor_Click" />
+                            <Button Margin="5,5,0,0" Height="26" Content="Open Airflow Valve" Click="ButtonOpenAirflow_Click" />
+                            <Button Margin="5,5,0,0" Height="26" Content="Close Airflow Valve" Click="ButtonCloseAirflow_Click" />
+                            
                         </StackPanel>
 
                         <StackPanel Grid.Column="3">
+                            <Button Margin="5,5,0,0" Height="26" Content="Close All slots" Click="ButtonCloseAll_Click" />
                             <Button Margin="5,5,0,0" Height="26" Content="Open Waste-Gate Slot" Click="ButtonOpenWasteGate_Click" />
                             <Button Margin="5,5,0,0" Height="26" Content="Close Waste-Gate Slot" Click="ButtonCloseWasteGate_Click" />
                         </StackPanel>

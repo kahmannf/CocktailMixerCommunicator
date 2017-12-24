@@ -40,6 +40,8 @@ namespace CocktailMixerCommunicator.Web
 
         public void StopListening()
         {
+            _listener.Abort();
+            _listener = null;
             _runningThread.Abort();
             _runningThread = null;
             _running = false;
@@ -51,16 +53,18 @@ namespace CocktailMixerCommunicator.Web
 
         private Thread _runningThread;
 
+        HttpListener _listener;
+
         private void RunInternal()
         {
-            HttpListener listener = new HttpListener();
-            listener.Prefixes.Add("http://localhost:5000/");
+            _listener = new HttpListener();
+            _listener.Prefixes.Add("http://localhost:5000/");
 
-            listener.Start();
+            _listener.Start();
 
             while (true)
             {
-                HandleRequest(listener.GetContext());
+                HandleRequest(_listener.GetContext());
             }
         }
 
