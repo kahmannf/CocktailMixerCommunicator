@@ -70,15 +70,50 @@ namespace CocktailMixerCommunicator.Web
 
         private volatile bool _mixing = false;
 
+        private void EndRequest(HttpListenerContext listenerContext, int status, string message)
+        {
+            listenerContext.Response.StatusCode = status;
+            listenerContext.Response.OutputStream.Write(message.Select(x => (byte)x).ToArray(), 0, message.Length);
+            listenerContext.Response.OutputStream.Close();
+        }
+        
+        
         private async void HandleRequest(HttpListenerContext listenerContext)
         {
             await Task.Run(() =>
             {
-                if (_mixing)
+                System.Collections.Specialized.NameValueCollection queryParameter = listenerContext.Request.QueryString;
+                
+                if(!string.IsNullOrEmpty(queryParameter["type"]))
                 {
-                    listenerContext.Response.StatusCode = 423; //HttpStatus 423 = LOCKED
-                    listenerContext.Response.OutputStream.Write("Already mixing!".Select(x => (byte)x).ToArray(), 0, 15);
+                    switch(queryParameter["type"])
+                    {
+                        case "mix":
+                            MixCocktail(listenerContext);
+                            break;
+                        case "menu":
+                            GetMenu(listenerContext);
+                            break;
+                        default:
+                            EndRequest(listenerContext, 400, "Invalid type provided");
+                            break;
+                    }
+                }
+                else
+                {
+                    listenerContext.Response.StatusCode = 400; //HttpStatus 400 = BadRequest
+                    listenerContext.Response.OutputStream.Write("No type provided".Select(x => (byte)x).ToArray(), 0, 16);
                     listenerContext.Response.OutputStream.Close();
+                }
+                
+            });
+        }
+        
+        private void MixCocktail(HttpListenerContext listenerContext)
+        {
+            if (_mixing)
+                {
+                    EndRequest(listenerContext, 423, "Already mixing!");
                 }
                 else
                 {
@@ -88,14 +123,12 @@ namespace CocktailMixerCommunicator.Web
 
                     CMGlobalState state = CMGlobalState.LoadStateFromFile(_config.CMStateDirectory);
 
-                    if ((queryParameter.GetKey(0) == "cocktail" && !string.IsNullOrEmpty(queryParameter[0]))
+                    if ((!string.IsNullOrEmpty(queryParameter["cocktail"]))
                         && (state.Recipes.FirstOrDefault(x => x.Name.ToUpper(CultureInfo.InvariantCulture) == queryParameter[0].ToUpper(CultureInfo.InvariantCulture)) is Recipe cocktail))
                     {
                         if (state.GetMissingIngredients(cocktail).Count() == 0)
                         {
-                            listenerContext.Response.StatusCode = 202; //HttpStatus 202 = Created
-                            listenerContext.Response.OutputStream.Write("Created".Select(x => (byte)x).ToArray(), 0, 7);
-                            listenerContext.Response.OutputStream.Close();
+                            EndRequest(listenerContext, 202, "Created");
 
                             try
                             {
@@ -138,21 +171,26 @@ namespace CocktailMixerCommunicator.Web
                         }
                         else
                         {
-                            listenerContext.Response.StatusCode = 410; //HttpStatus 410 = Gone
-                            listenerContext.Response.OutputStream.Write("Gone".Select(x => (byte)x).ToArray(), 0, 4);
-                            listenerContext.Response.OutputStream.Close();
+                            EndRequest(listenerContext, 410, "Gone");
                         }
                     }
                     else
                     {
-                        listenerContext.Response.StatusCode = 400; //HttpStatus 400 = BadRequest
-                        listenerContext.Response.OutputStream.Write("Bad Request".Select(x => (byte)x).ToArray(), 0, 11);
-                        listenerContext.Response.OutputStream.Close();
+                        EndRequest(listenerContext, 400, "No cocktail found");
                     }
 
                     _mixing = false;
                 }
-            });
+        }
+        
+        private void GetMenu(HttpListenerContext listenerContext)
+        {
+            CMGlobalState state = CMGlobalState.LoadStateFromFile(_config.CMStateDirectory);
+            Recipe[] cocktails = state.Recipes.ToArray();
+            
+            string message = JsonConvert.SerializeObject(cocktails);
+            
+            EndRequest(listenerContext, 200, message);
         }
     }
 }
