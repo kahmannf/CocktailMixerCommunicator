@@ -118,14 +118,19 @@ namespace CocktailMixerCommunicator.Communication
 
                 OpenPort((byte)state.CompressorPortId);
 
-                Thread.Sleep(COMPRESSOR_PREASURE_BUILD_TIME_MS); //build up some preasure
+                //Thread.Sleep(COMPRESSOR_PREASURE_BUILD_TIME_MS); //build up some preasure
+
+                int mlAir = (1000 - supplyItem.AmountMLLeft);
+
+                Thread.Sleep(mlAir * 2);
 
                 OpenPort(portId);
             
-                int remainingTime = Convert.ToInt32(b.AmountTimeCoefficient * amountInMl * 5.9); 
+                int remainingTime = Convert.ToInt32(b.AmountTimeCoefficient * (amountInMl -((190d / 1000d) * (double)mlAir)) * 2d);
 
                 remainingTime -= remainingTime % 10;
 
+                
 
                 for (; remainingTime > 0; remainingTime -= 10)
                 {
@@ -141,7 +146,9 @@ namespace CocktailMixerCommunicator.Communication
 
                 OpenPort((byte)state.WasteGatePortId);
 
-                Thread.Sleep(RandomUtilities.MathUtil.Util.TakeLarger(2000, (int)(amountInMl * ((b.AmountTimeCoefficient - 1 * 2) + 1) * 18))); //reduce preasure
+                //Thread.Sleep(RandomUtilities.MathUtil.Util.TakeLarger(2000, (int)(amountInMl * ((b.AmountTimeCoefficient - 1 * 2) + 1) * 18))); //reduce preasure
+
+                Thread.Sleep(3000 + ((mlAir + amountInMl) * 6));
 
                 ClosePort(portId);
 
